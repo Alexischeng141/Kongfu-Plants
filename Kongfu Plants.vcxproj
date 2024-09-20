@@ -1,0 +1,360 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>17.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{798238c5-013a-4a43-9f71-dbb6defc543d}</ProjectGuid>
+    <RootNamespace>KongfuPlants</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="Animation.h" />
+    <ClInclude Include="Camera.h" />
+    <ClInclude Include="GameScene.h" />
+    <ClInclude Include="MenuScene.h" />
+    <ClInclude Include="peashooter_role.h" />
+    <ClInclude Include="Platform.h" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="role.h" />
+    <ClInclude Include="scene.h" />
+    <ClInclude Include="SceneManager.h" />
+    <ClInclude Include="SelectorScene.h" />
+    <ClInclude Include="sunflower_role.h" />
+    <ClInclude Include="Timer.h" />
+    <ClInclude Include="Utils.h" />
+    <ClInclude Include="Vector2.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Atlas.h" />
+    <ClCompile Include="main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="resource\1P.png" />
+    <Image Include="resource\1P_cursor.png" />
+    <Image Include="resource\1P_desc.png" />
+    <Image Include="resource\1P_selector_btn_down.png" />
+    <Image Include="resource\1P_selector_btn_idle.png" />
+    <Image Include="resource\1P_winner.png" />
+    <Image Include="resource\2P.png" />
+    <Image Include="resource\2P_cursor.png" />
+    <Image Include="resource\2P_desc.png" />
+    <Image Include="resource\2P_selector_btn_down.png" />
+    <Image Include="resource\2P_selector_btn_idle.png" />
+    <Image Include="resource\2P_winner.png" />
+    <Image Include="resource\avatar_gloomshroom.png" />
+    <Image Include="resource\avatar_nut.png" />
+    <Image Include="resource\avatar_peashooter.png" />
+    <Image Include="resource\avatar_sunflower.png" />
+    <Image Include="resource\bubbles_1.png" />
+    <Image Include="resource\bubbles_2.png" />
+    <Image Include="resource\bubbles_3.png" />
+    <Image Include="resource\bubbles_4.png" />
+    <Image Include="resource\bubbles_5.png" />
+    <Image Include="resource\bubbles_6.png" />
+    <Image Include="resource\bubbles_7.png" />
+    <Image Include="resource\bubbles_ex_1.png" />
+    <Image Include="resource\bubbles_ex_2.png" />
+    <Image Include="resource\bubbles_ex_3.png" />
+    <Image Include="resource\bubbles_ex_4.png" />
+    <Image Include="resource\bubbles_ex_5.png" />
+    <Image Include="resource\bubbles_ex_6.png" />
+    <Image Include="resource\bubbles_ex_7.png" />
+    <Image Include="resource\buff_box_blue_1.png" />
+    <Image Include="resource\buff_box_blue_2.png" />
+    <Image Include="resource\buff_box_blue_3.png" />
+    <Image Include="resource\buff_box_blue_4.png" />
+    <Image Include="resource\buff_box_pink_1.png" />
+    <Image Include="resource\buff_box_pink_2.png" />
+    <Image Include="resource\buff_box_pink_3.png" />
+    <Image Include="resource\buff_box_pink_4.png" />
+    <Image Include="resource\buff_box_yellow_1.png" />
+    <Image Include="resource\buff_box_yellow_2.png" />
+    <Image Include="resource\buff_box_yellow_3.png" />
+    <Image Include="resource\buff_box_yellow_4.png" />
+    <Image Include="resource\buff_icon_hurry.png" />
+    <Image Include="resource\buff_icon_invisible.png" />
+    <Image Include="resource\buff_icon_recover.png" />
+    <Image Include="resource\buff_icon_silence.png" />
+    <Image Include="resource\gloomshroom_attack_ex_1.png" />
+    <Image Include="resource\gloomshroom_attack_ex_2.png" />
+    <Image Include="resource\gloomshroom_attack_ex_3.png" />
+    <Image Include="resource\gloomshroom_attack_ex_4.png" />
+    <Image Include="resource\gloomshroom_attack_ex_5.png" />
+    <Image Include="resource\gloomshroom_attack_ex_6.png" />
+    <Image Include="resource\gloomshroom_attack_ex_7.png" />
+    <Image Include="resource\gloomshroom_die_1.png" />
+    <Image Include="resource\gloomshroom_die_2.png" />
+    <Image Include="resource\gloomshroom_die_3.png" />
+    <Image Include="resource\gloomshroom_idle_1.png" />
+    <Image Include="resource\gloomshroom_idle_2.png" />
+    <Image Include="resource\gloomshroom_idle_3.png" />
+    <Image Include="resource\gloomshroom_idle_4.png" />
+    <Image Include="resource\gloomshroom_run_1.png" />
+    <Image Include="resource\gloomshroom_run_2.png" />
+    <Image Include="resource\gloomshroom_run_3.png" />
+    <Image Include="resource\gloomshroom_selector_background.png" />
+    <Image Include="resource\gravestone.png" />
+    <Image Include="resource\hills.png" />
+    <Image Include="resource\jump_effect_1.png" />
+    <Image Include="resource\jump_effect_2.png" />
+    <Image Include="resource\jump_effect_3.png" />
+    <Image Include="resource\jump_effect_4.png" />
+    <Image Include="resource\jump_effect_5.png" />
+    <Image Include="resource\land_effect_1.png" />
+    <Image Include="resource\land_effect_2.png" />
+    <Image Include="resource\menu_background.png" />
+    <Image Include="resource\nut_attack_ex_1.png" />
+    <Image Include="resource\nut_attack_ex_2.png" />
+    <Image Include="resource\nut_attack_ex_3.png" />
+    <Image Include="resource\nut_attack_ex_4.png" />
+    <Image Include="resource\nut_attack_ex_5.png" />
+    <Image Include="resource\nut_die_1.png" />
+    <Image Include="resource\nut_die_2.png" />
+    <Image Include="resource\nut_die_3.png" />
+    <Image Include="resource\nut_explode_1.png" />
+    <Image Include="resource\nut_explode_2.png" />
+    <Image Include="resource\nut_explode_3.png" />
+    <Image Include="resource\nut_explode_4.png" />
+    <Image Include="resource\nut_explode_5.png" />
+    <Image Include="resource\nut_idle_1.png" />
+    <Image Include="resource\nut_idle_2.png" />
+    <Image Include="resource\nut_idle_3.png" />
+    <Image Include="resource\nut_run_1.png" />
+    <Image Include="resource\nut_run_2.png" />
+    <Image Include="resource\nut_run_3.png" />
+    <Image Include="resource\nut_selector_background.png" />
+    <Image Include="resource\pea.png" />
+    <Image Include="resource\peashooter_attack_ex_1.png" />
+    <Image Include="resource\peashooter_attack_ex_2.png" />
+    <Image Include="resource\peashooter_attack_ex_3.png" />
+    <Image Include="resource\peashooter_die_1.png" />
+    <Image Include="resource\peashooter_die_2.png" />
+    <Image Include="resource\peashooter_die_3.png" />
+    <Image Include="resource\peashooter_die_4.png" />
+    <Image Include="resource\peashooter_idle_1.png" />
+    <Image Include="resource\peashooter_idle_2.png" />
+    <Image Include="resource\peashooter_idle_3.png" />
+    <Image Include="resource\peashooter_idle_4.png" />
+    <Image Include="resource\peashooter_idle_5.png" />
+    <Image Include="resource\peashooter_idle_6.png" />
+    <Image Include="resource\peashooter_idle_7.png" />
+    <Image Include="resource\peashooter_idle_8.png" />
+    <Image Include="resource\peashooter_idle_9.png" />
+    <Image Include="resource\peashooter_run_1.png" />
+    <Image Include="resource\peashooter_run_2.png" />
+    <Image Include="resource\peashooter_run_3.png" />
+    <Image Include="resource\peashooter_run_4.png" />
+    <Image Include="resource\peashooter_run_5.png" />
+    <Image Include="resource\peashooter_selector_background.png" />
+    <Image Include="resource\pea_break_1.png" />
+    <Image Include="resource\pea_break_2.png" />
+    <Image Include="resource\pea_break_3.png" />
+    <Image Include="resource\platform_large.png" />
+    <Image Include="resource\platform_small.png" />
+    <Image Include="resource\run_effect_1.png" />
+    <Image Include="resource\run_effect_2.png" />
+    <Image Include="resource\run_effect_3.png" />
+    <Image Include="resource\run_effect_4.png" />
+    <Image Include="resource\selector_background.png" />
+    <Image Include="resource\selector_tip.png" />
+    <Image Include="resource\sky.png" />
+    <Image Include="resource\sunflower_attack_ex_1.png" />
+    <Image Include="resource\sunflower_attack_ex_2.png" />
+    <Image Include="resource\sunflower_attack_ex_3.png" />
+    <Image Include="resource\sunflower_attack_ex_4.png" />
+    <Image Include="resource\sunflower_attack_ex_5.png" />
+    <Image Include="resource\sunflower_attack_ex_6.png" />
+    <Image Include="resource\sunflower_attack_ex_7.png" />
+    <Image Include="resource\sunflower_attack_ex_8.png" />
+    <Image Include="resource\sunflower_attack_ex_9.png" />
+    <Image Include="resource\sunflower_die_1.png" />
+    <Image Include="resource\sunflower_die_2.png" />
+    <Image Include="resource\sunflower_idle_1.png" />
+    <Image Include="resource\sunflower_idle_2.png" />
+    <Image Include="resource\sunflower_idle_3.png" />
+    <Image Include="resource\sunflower_idle_4.png" />
+    <Image Include="resource\sunflower_idle_5.png" />
+    <Image Include="resource\sunflower_idle_6.png" />
+    <Image Include="resource\sunflower_idle_7.png" />
+    <Image Include="resource\sunflower_idle_8.png" />
+    <Image Include="resource\sunflower_run_1.png" />
+    <Image Include="resource\sunflower_run_2.png" />
+    <Image Include="resource\sunflower_run_3.png" />
+    <Image Include="resource\sunflower_run_4.png" />
+    <Image Include="resource\sunflower_run_5.png" />
+    <Image Include="resource\sunflower_selector_background.png" />
+    <Image Include="resource\sun_1.png" />
+    <Image Include="resource\sun_2.png" />
+    <Image Include="resource\sun_3.png" />
+    <Image Include="resource\sun_4.png" />
+    <Image Include="resource\sun_5.png" />
+    <Image Include="resource\sun_explode_1.png" />
+    <Image Include="resource\sun_explode_2.png" />
+    <Image Include="resource\sun_explode_3.png" />
+    <Image Include="resource\sun_explode_4.png" />
+    <Image Include="resource\sun_explode_5.png" />
+    <Image Include="resource\sun_ex_1.png" />
+    <Image Include="resource\sun_ex_2.png" />
+    <Image Include="resource\sun_ex_3.png" />
+    <Image Include="resource\sun_ex_4.png" />
+    <Image Include="resource\sun_ex_5.png" />
+    <Image Include="resource\sun_ex_explode_1.png" />
+    <Image Include="resource\sun_ex_explode_2.png" />
+    <Image Include="resource\sun_ex_explode_3.png" />
+    <Image Include="resource\sun_ex_explode_4.png" />
+    <Image Include="resource\sun_ex_explode_5.png" />
+    <Image Include="resource\sun_text_1.png" />
+    <Image Include="resource\sun_text_2.png" />
+    <Image Include="resource\sun_text_3.png" />
+    <Image Include="resource\sun_text_4.png" />
+    <Image Include="resource\sun_text_5.png" />
+    <Image Include="resource\sun_text_6.png" />
+    <Image Include="resource\VS.png" />
+    <Image Include="resource\winnner_bar.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="resource\bgm_game.mp3" />
+    <Media Include="resource\bgm_menu.mp3" />
+    <Media Include="resource\bubbles_shot.mp3" />
+    <Media Include="resource\bubbles_shot_ex.mp3" />
+    <Media Include="resource\nut_dash.wav" />
+    <Media Include="resource\nut_explode.mp3" />
+    <Media Include="resource\pea_break_1.mp3" />
+    <Media Include="resource\pea_break_2.mp3" />
+    <Media Include="resource\pea_break_3.mp3" />
+    <Media Include="resource\pea_shoot_1.mp3" />
+    <Media Include="resource\pea_shoot_2.mp3" />
+    <Media Include="resource\pea_shoot_ex.mp3" />
+    <Media Include="resource\sun_explode.mp3" />
+    <Media Include="resource\sun_explode_ex.mp3" />
+    <Media Include="resource\sun_text.mp3" />
+    <Media Include="resource\ui_confirm.wav" />
+    <Media Include="resource\ui_switch.wav" />
+    <Media Include="resource\ui_win.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="resource\IPix.ttf" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
