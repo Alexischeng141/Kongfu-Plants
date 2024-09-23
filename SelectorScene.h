@@ -8,8 +8,8 @@
 #include "Animation.h"
 
 #include "Nut.h"
-#include "Peashooter_role.h"
-#include "Sunflower_role.h"
+#include "Peashooter.h"
+#include "Sunflower.h"
 #include "Gloomshroom.h"
 
 extern IMAGE img_vs;

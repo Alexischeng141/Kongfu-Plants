@@ -128,19 +128,25 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
+    <ClInclude Include="Bullet.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="GameScene.h" />
     <ClInclude Include="Gloomshroom.h" />
+    <ClInclude Include="GloomshroomBullet.h" />
     <ClInclude Include="MenuScene.h" />
     <ClInclude Include="Nut.h" />
-    <ClInclude Include="Peashooter_role.h" />
+    <ClInclude Include="NutBullet.h" />
+    <ClInclude Include="PeashooterBullet.h" />
+    <ClInclude Include="Peashooter.h" />
     <ClInclude Include="Platform.h" />
     <ClInclude Include="RoleId.h" />
     <ClInclude Include="Role.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="SelectorScene.h" />
-    <ClInclude Include="Sunflower_role.h" />
+    <ClInclude Include="SunflowerBullet.h" />
+    <ClInclude Include="SunflowerBulletEx.h" />
+    <ClInclude Include="Sunflower.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="Utils.h" />
     <ClInclude Include="Vector2.h" />

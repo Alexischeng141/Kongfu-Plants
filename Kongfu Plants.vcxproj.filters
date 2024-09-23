@@ -19,6 +19,9 @@
     <Filter Include="头文件\role">
       <UniqueIdentifier>{2cb23e4a-af19-4e03-9f1c-7cf6f1bb4589}</UniqueIdentifier>
     </Filter>
+    <Filter Include="头文件\bullet">
+      <UniqueIdentifier>{8095c8ae-0439-4445-9403-17c8ad3630bb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h">
@@ -57,10 +60,10 @@
     <ClInclude Include="Role.h">
       <Filter>头文件\role</Filter>
     </ClInclude>
-    <ClInclude Include="Peashooter_role.h">
+    <ClInclude Include="Peashooter.h">
       <Filter>头文件\role</Filter>
     </ClInclude>
-    <ClInclude Include="Sunflower_role.h">
+    <ClInclude Include="Sunflower.h">
       <Filter>头文件\role</Filter>
     </ClInclude>
     <ClInclude Include="Gloomshroom.h">
@@ -71,6 +74,24 @@
     </ClInclude>
     <ClInclude Include="RoleId.h">
       <Filter>头文件\role</Filter>
+    </ClInclude>
+    <ClInclude Include="Bullet.h">
+      <Filter>头文件\bullet</Filter>
+    </ClInclude>
+    <ClInclude Include="PeashooterBullet.h">
+      <Filter>头文件\bullet</Filter>
+    </ClInclude>
+    <ClInclude Include="SunflowerBullet.h">
+      <Filter>头文件\bullet</Filter>
+    </ClInclude>
+    <ClInclude Include="NutBullet.h">
+      <Filter>头文件\bullet</Filter>
+    </ClInclude>
+    <ClInclude Include="GloomshroomBullet.h">
+      <Filter>头文件\bullet</Filter>
+    </ClInclude>
+    <ClInclude Include="SunflowerBulletEx.h">
+      <Filter>头文件\bullet</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
