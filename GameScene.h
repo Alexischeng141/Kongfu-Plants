@@ -2,6 +2,7 @@
 #define _GAMESCENE_H_
 
 #include "scene.h"
+#include "Role.h"
 #include "Camera.h"
 #include "platform.h"
 #include "SceneManager.h"
@@ -17,6 +18,9 @@ extern std::vector<Platform> Platform_list;
 
 extern Camera camera;
 
+extern Role* role_1;
+extern Role* role_2;
+
 extern bool is_debug;
 
 class GameScene : public scene {
@@ -28,6 +32,10 @@ public:
 	// 不同的游戏场景可以继承这个基类
 
 	void OnEnter() {
+
+		role_1->set_position(200, 50);
+		role_2->set_position(975, 50);
+
 		pos_img_sky.x = (getwidth() - img_sky.getwidth()) / 2;
 		pos_img_sky.y = (getheight() - img_sky.getheight()) / 2;
 
@@ -71,11 +79,21 @@ public:
 	}
 
 	void OnInput(const ExMessage& msg) {
+
+		role_1->on_input(msg);
+		role_2->on_input(msg);
+
 		switch (msg.message)
 		{
+		case WM_KEYDOWN:
+
+			break;
 		case WM_KEYUP:
-			if (msg.vkcode == 0x51) {
+			if (msg.vkcode == 0x51 && is_debug == false) {
 				is_debug = true;
+			}
+			else if (msg.vkcode == 0x51 && is_debug == true) {
+				is_debug = false;
 			}
 			break;
 		default:
@@ -84,23 +102,29 @@ public:
 	}
 
 	void OnUpdate(int interval_time) {
-
+		role_1->on_update(interval_time);
+		role_2->on_update(interval_time);
 	}
 
-
 	void OnDraw(const Camera& camera) {
+		// 地形加载
 		putimage_alpha(camera, pos_img_sky.x, pos_img_sky.y, &img_sky);
 		putimage_alpha(camera, pos_img_hills.x, pos_img_hills.y, &img_hills);
 
+		// 互动平台加载
 		for (const Platform& platform : Platform_list) {
 			platform.on_draw(camera);
 		}
 
+		// debug 提示字样
 		if (is_debug) {
 			settextcolor(RGB(255, 0, 0));
 			outtextxy(15, 15, _T("Press 'Q' again to stop debuging"));
 		}
 
+		// 角色渲染
+		role_1->on_draw(camera);
+		role_2->on_draw(camera);
 
 	}
 

@@ -1,9 +1,16 @@
 #ifndef _SELECTORSCENE_H_
 #define _SELECTORSCENE_H_
 
-#include "scene.h"
-#include "Animation.h"
 #include <iostream>
+#include "scene.h"
+#include "RoleId.h"
+#include "SceneManager.h"
+#include "Animation.h"
+
+#include "Nut.h"
+#include "Peashooter_role.h"
+#include "Sunflower_role.h"
+#include "Gloomshroom.h"
 
 extern IMAGE img_vs;
 extern IMAGE img_1P;
@@ -14,6 +21,7 @@ extern IMAGE img_gravestone_left;
 extern IMAGE img_gravestone_right;
 extern IMAGE img_selector_tip;
 extern IMAGE img_selector_background;
+
 extern IMAGE img_1P_selector_btn_idle_left;
 extern IMAGE img_1P_selector_btn_idle_right;
 extern IMAGE img_1P_selector_btn_down_left;
@@ -22,16 +30,28 @@ extern IMAGE img_2P_selector_btn_idle_left;
 extern IMAGE img_2P_selector_btn_idle_right;
 extern IMAGE img_2P_selector_btn_down_left;
 extern IMAGE img_2P_selector_btn_down_right;
+
+//角色背景
 extern IMAGE img_peashooter_selector_background_left;
 extern IMAGE img_peashooter_selector_background_right;
 extern IMAGE img_sunflower_selector_background_left;
 extern IMAGE img_sunflower_selector_background_right;
+extern IMAGE img_gloomshroom_selector_background_left;
+extern IMAGE img_gloomshroom_selector_background_right;
+extern IMAGE img_nut_selector_background_left;
+extern IMAGE img_nut_selector_background_right;
 
 extern Atlas atlas_peashooter_idle_right;
 extern Atlas atlas_sunflower_idle_right;
+extern Atlas atlas_gloomshroom_idle_right;
+extern Atlas atlas_nut_idle_right;
+
 
 extern IMAGE img_avatar_peashooter;
 extern IMAGE img_avatar_sunflower;
+
+extern Role* role_1;
+extern Role* role_2;
 
 extern SceneManager _SM;
 
@@ -44,8 +64,12 @@ public:
 
 		animation_peashooter.set_atlas(&atlas_peashooter_idle_right);
 		animation_sunflower.set_atlas(&atlas_sunflower_idle_right);
+		animation_gloomshroom.set_atlas(&atlas_gloomshroom_idle_right);
+		animation_nut.set_atlas(&atlas_nut_idle_right);
 		animation_peashooter.set_inter_time(100);
 		animation_sunflower.set_inter_time(100);
+		animation_gloomshroom.set_inter_time(100);
+		animation_nut.set_inter_time(100);
 
 		static const int OFFSET_X = 50;
 
@@ -155,6 +179,9 @@ public:
 	void OnUpdate(int interval_time) {
 		animation_peashooter.on_update(interval_time);
 		animation_sunflower.on_update(interval_time);
+		animation_gloomshroom.on_update(interval_time);
+		animation_nut.on_update(interval_time);
+		
 
 		selector_background_scorll_locate_offset += 5;
 		if (selector_background_scorll_locate_offset >= img_peashooter_selector_background_right.getwidth()) {
@@ -175,6 +202,12 @@ public:
 		case SelectorScene::playerType::Sunflower:
 			img_P1_selector_background = &img_sunflower_selector_background_right;
 			break;
+		case SelectorScene::playerType::Gloomshroom:
+			img_P1_selector_background = &img_gloomshroom_selector_background_right;
+			break;
+		case SelectorScene::playerType::Nut:
+			img_P1_selector_background = &img_nut_selector_background_right;
+			break;
 		case SelectorScene::playerType::Invalid:
 			break;
 		default:
@@ -188,6 +221,12 @@ public:
 			break;
 		case SelectorScene::playerType::Sunflower:
 			img_P2_selector_background = &img_sunflower_selector_background_left;
+			break;
+		case SelectorScene::playerType::Gloomshroom:
+			img_P2_selector_background = &img_gloomshroom_selector_background_left;
+			break;
+		case SelectorScene::playerType::Nut:
+			img_P2_selector_background = &img_nut_selector_background_left;
 			break;
 		case SelectorScene::playerType::Invalid:
 			break;
@@ -224,6 +263,15 @@ public:
 			pos_img_1P_name.x = pos_img_1P_gravestone.x + (img_gravestone_right.getwidth() - textwidth(str_sunflower_name)) / 2;
 			outtextxy_shaded(pos_img_1P_name.x, pos_img_1P_name.y, str_sunflower_name);
 			break;
+		case SelectorScene::playerType::Gloomshroom:
+			animation_gloomshroom.on_draw(camera, pos_animation_1P.x, pos_animation_1P.y);
+			pos_img_1P_name.x = pos_img_1P_gravestone.x + (img_gravestone_right.getwidth() - textwidth(str_gloomshroom_name)) / 2;
+			outtextxy_shaded(pos_img_1P_name.x, pos_img_1P_name.y, str_gloomshroom_name);
+			break;
+		case SelectorScene::playerType::Nut:
+			animation_nut.on_draw(camera, pos_animation_1P.x, pos_animation_1P.y);
+			pos_img_1P_name.x = pos_img_1P_gravestone.x + (img_gravestone_right.getwidth() - textwidth(str_nut_name)) / 2;
+			outtextxy_shaded(pos_img_1P_name.x, pos_img_1P_name.y, str_nut_name);
 		case SelectorScene::playerType::Invalid:
 			break;
 		default:
@@ -242,6 +290,16 @@ public:
 			pos_img_2P_name.x = pos_img_2P_gravestone.x + (img_gravestone_left.getwidth() - textwidth(str_sunflower_name)) / 2;
 			outtextxy_shaded(pos_img_2P_name.x, pos_img_2P_name.y, str_sunflower_name);
 			break;
+		case SelectorScene::playerType::Gloomshroom:
+			animation_gloomshroom.on_draw(camera, pos_animation_2P.x, pos_animation_2P.y);
+			pos_img_2P_name.x = pos_img_2P_gravestone.x + (img_gravestone_left.getwidth() - textwidth(str_gloomshroom_name)) / 2;
+			outtextxy_shaded(pos_img_2P_name.x, pos_img_2P_name.y, str_gloomshroom_name);
+			break;
+		case SelectorScene::playerType::Nut:
+			animation_nut.on_draw(camera, pos_animation_2P.x, pos_animation_2P.y);
+			pos_img_1P_name.x = pos_img_2P_gravestone.x + (img_gravestone_left.getwidth() - textwidth(str_nut_name)) / 2;
+			outtextxy_shaded(pos_img_2P_name.x, pos_img_2P_name.y, str_nut_name);
+			break;
 		case SelectorScene::playerType::Invalid:
 			break;
 		default:
@@ -259,13 +317,55 @@ public:
 
 		putimage_alpha(camera, pos_img_1P_desc.x, pos_img_1P_desc.y, &img_1P_desc);
 		putimage_alpha(camera, pos_img_2P_desc.x, pos_img_2P_desc.y, &img_2P_desc);
-
 		putimage_alpha(camera, pos_img_tip.x, pos_img_tip.y, &img_selector_tip);
+		
 	}
 
 	void OnExit() {
+		
+		switch (player_type_1)
+		{
+		case SelectorScene::playerType::Peashooter:
+			role_1 = new Peashooter;
+			break;
+		case SelectorScene::playerType::Sunflower:
+			role_1 = new Sunflower;
+			break;
+		case SelectorScene::playerType::Gloomshroom:
+			role_1 = new Gloomshroom;
+			break;
+		case SelectorScene::playerType::Nut:
+			role_1 = new Nut;
+			break;
+		case SelectorScene::playerType::Invalid:
+			break;
+		default:
+			break;
+		}
+		role_1->set_id(RoleId::P1);
 
+		switch (player_type_2)
+		{
+		case SelectorScene::playerType::Peashooter:
+			role_2 = new Peashooter;
+			break;
+		case SelectorScene::playerType::Sunflower:
+			role_2 = new Sunflower;
+			break;
+		case SelectorScene::playerType::Gloomshroom:
+			role_2 = new Gloomshroom;
+			break;
+		case SelectorScene::playerType::Nut:
+			role_2 = new Nut;
+			break;
+		case SelectorScene::playerType::Invalid:
+			break;
+		default:
+			break;
+		}
+		role_2->set_id(RoleId::P2);
 	}
+	
 
 	// 渲染带阴影的文字
 	void outtextxy_shaded(int x, int y, LPCTSTR str) {
@@ -280,6 +380,8 @@ private:
 	{
 		Peashooter = 0,
 		Sunflower,
+		Gloomshroom,
+		Nut,
 		Invalid
 	};
 
@@ -303,12 +405,16 @@ private:
 
 	Animation animation_peashooter;
 	Animation animation_sunflower;
+	Animation animation_gloomshroom;
+	Animation animation_nut;
 
 	playerType player_type_1 = playerType::Peashooter;
 	playerType player_type_2 = playerType::Sunflower;
 
 	LPCTSTR str_peashooter_name = _T("婉豆射手");
 	LPCTSTR str_sunflower_name = _T("龙日葵");
+	LPCTSTR str_gloomshroom_name = _T("泡泡菇");
+	LPCTSTR str_nut_name = _T("坚果");
 
 	int selector_background_scorll_locate_offset = 0;	// 背景板滚动距离基准线
 

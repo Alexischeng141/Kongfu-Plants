@@ -51,19 +51,25 @@
     <ClInclude Include="SelectorScene.h">
       <Filter>头文件\scene</Filter>
     </ClInclude>
-    <ClInclude Include="scene.h">
+    <ClInclude Include="Scene.h">
       <Filter>头文件\scene</Filter>
     </ClInclude>
-    <ClInclude Include="resource.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="role.h">
+    <ClInclude Include="Role.h">
       <Filter>头文件\role</Filter>
     </ClInclude>
-    <ClInclude Include="peashooter_role.h">
+    <ClInclude Include="Peashooter_role.h">
       <Filter>头文件\role</Filter>
     </ClInclude>
-    <ClInclude Include="sunflower_role.h">
+    <ClInclude Include="Sunflower_role.h">
+      <Filter>头文件\role</Filter>
+    </ClInclude>
+    <ClInclude Include="Gloomshroom.h">
+      <Filter>头文件\role</Filter>
+    </ClInclude>
+    <ClInclude Include="Nut.h">
+      <Filter>头文件\role</Filter>
+    </ClInclude>
+    <ClInclude Include="RoleId.h">
       <Filter>头文件\role</Filter>
     </ClInclude>
   </ItemGroup>

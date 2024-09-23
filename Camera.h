@@ -48,7 +48,7 @@ public:
 	}
 
 private:
-	Vector2 position;	// 摄像机位置
+	Vector2 position = { 0,0 };	// 摄像机位置
 	Timer timer_shake;			// 摄像机抖动计时器
 	bool is_shaking = false;	// 摄像机是否震动
 	float shaking_strength = 0;	// 摄像机震动强度

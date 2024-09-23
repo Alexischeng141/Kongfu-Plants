@@ -33,11 +33,10 @@ public:
 	};
 
 public:
-	CollisionBox collision_box;
+	CollisionBox collision_box = { 0, 0, 0 };
 	IMAGE* img = nullptr;
 	POINT position = { 0 };
 
 };
-
 
 #endif // !_PLATFORM_H_

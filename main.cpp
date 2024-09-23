@@ -1,11 +1,14 @@
 #pragma comment(lib, "Winmm.lib")
 #include "Utils.h"
 #include "Atlas.h"
+#include "Role.h"
 #include "MenuScene.h"
 #include "GameScene.h"
 #include "platform.h"
 #include "SelectorScene.h"
 #include "SceneManager.h"
+
+#include <graphics.h>
 
 #pragma warning(disable: 28159)
 
@@ -25,12 +28,12 @@ IMAGE img_menu_background;
 
 IMAGE img_selector_tip;
 IMAGE img_selector_background;
-IMAGE img_nut_selector_background;
+IMAGE img_nut_selector_background_left;
+IMAGE img_nut_selector_background_right;
 IMAGE img_sunflower_selector_background_left;
 IMAGE img_sunflower_selector_background_right;
 IMAGE img_peashooter_selector_background_left;
 IMAGE img_peashooter_selector_background_right;
-IMAGE img_gloomshroom_selector_background;
 IMAGE img_gloomshroom_selector_background_left;
 IMAGE img_gloomshroom_selector_background_right;
 
@@ -77,7 +80,8 @@ Atlas atlas_buff_box_yellow;
 Atlas atlas_gloomshroom_die;
 Atlas atlas_gloomshroom_attack_ex_right;
 Atlas atlas_gloomshroom_attack_ex_left;
-Atlas atlas_gloomshroom_idle;
+Atlas atlas_gloomshroom_idle_right;
+Atlas atlas_gloomshroom_idle_left;
 Atlas atlas_gloomshroom_run_right;
 Atlas atlas_gloomshroom_run_left;
 
@@ -88,17 +92,18 @@ Atlas atlas_jump_effect_left;
 Atlas atlas_land_effect;
 
 Atlas atlas_nut_die;
-Atlas atlas_nut_idle;
-Atlas atlas_nut_run_right;
+Atlas atlas_nut_idle_left;
+Atlas atlas_nut_idle_right;
 Atlas atlas_nut_run_left;
+Atlas atlas_nut_run_right;
 Atlas atlas_nut_explode;
 Atlas atlas_nut_attack_ex;
 
-Atlas atlas_peashooter_die;
-Atlas atlas_peashooter_idle_right;
+Atlas atlas_peashooter_die;						// ËÀÍö¶¯»­
 Atlas atlas_peashooter_idle_left;
-Atlas atlas_peashooter_run_right;
+Atlas atlas_peashooter_idle_right;
 Atlas atlas_peashooter_run_left;
+Atlas atlas_peashooter_run_right;
 Atlas atlas_peashooter_attack_ex;
 
 Atlas atlas_pea_break;
@@ -110,14 +115,18 @@ Atlas atlas_sun_explode;
 Atlas atlas_sun_text;
 
 Atlas atlas_sunflower_die;
+Atlas atlas_sunflower_idle_left;
 Atlas atlas_sunflower_idle_right;
-Atlas atlas_sunflower_run_right;
 Atlas atlas_sunflower_run_left;
+Atlas atlas_sunflower_run_right;
 Atlas atlas_sunflower_attack_ex;
 
 scene* game_scene = nullptr;
 scene* menu_scene = nullptr;
 scene* selector_scene = nullptr;
+
+Role* role_1 = nullptr;
+Role* role_2 = nullptr;
 
 std::vector<Platform> Platform_list;
 
@@ -130,7 +139,7 @@ void load_game_resource() {
 	AddFontResourceEx(_T("resource/IPix.ttf"), FR_PRIVATE, NULL);
 
 	loadimage(&img_menu_background, _T("resource/menu_background.png"));
-
+	// 1P
 	loadimage(&img_1P, _T("resource/1P.png"));
 	loadimage(&img_1P_desc, _T("resource/1P_desc.png"));
 	loadimage(&img_1P_cursor, _T("resource/1P_cursor.png"));
@@ -139,7 +148,7 @@ void load_game_resource() {
 	loadimage(&img_1P_selector_btn_idle_right, _T("resource/1P_selector_btn_idle.png"));
 	filp_image(&img_1P_selector_btn_idle_right, &img_1P_selector_btn_idle_left);
 	loadimage(&img_1P_winner, _T("resource/1P_winner.png"));
-
+	// 2P
 	loadimage(&img_2P, _T("resource/2P.png"));
 	loadimage(&img_2P_desc, _T("resource/2P_desc.png"));
 	loadimage(&img_2P_cursor, _T("resource/2P_cursor.png"));
@@ -164,13 +173,15 @@ void load_game_resource() {
 	loadimage(&img_pea, _T("resource/pea.png"));
 	loadimage(&img_platform_small, _T("resource/platform_small.png"));
 	loadimage(&img_platform_large, _T("resource/platform_large.png"));
-	loadimage(&img_nut_selector_background, _T("resource/nut_selector_background.png"));
 
+	// ½ÇÉ«Ñ¡Ôñ½çÃæ±³¾°
+	loadimage(&img_nut_selector_background_right, _T("resource/nut_selector_background.png"));
+	filp_image(&img_nut_selector_background_right, &img_nut_selector_background_left);
 	loadimage(&img_sunflower_selector_background_right, _T("resource/sunflower_selector_background.png"));
 	filp_image(&img_sunflower_selector_background_right, &img_sunflower_selector_background_left);
 	loadimage(&img_peashooter_selector_background_right, _T("resource/peashooter_selector_background.png"));
 	filp_image(&img_peashooter_selector_background_right, &img_peashooter_selector_background_left);
-	loadimage(&img_gloomshroom_selector_background, _T("resource/gloomshroom_selector_background.png"));
+	loadimage(&img_gloomshroom_selector_background_right, _T("resource/gloomshroom_selector_background.png"));
 	filp_image(&img_gloomshroom_selector_background_right, &img_gloomshroom_selector_background_left);
 
 	loadimage(&img_buff_icon_silence, _T("resource/buff_icon_silence.png"));
@@ -185,23 +196,26 @@ void load_game_resource() {
 	atlas_buff_box_pink.load_atlas_resource(_T("resource/buff_box_pink_%d.png"), 4);
 	atlas_buff_box_yellow.load_atlas_resource(_T("resource/buff_box_yellow_%d.png"), 4);
 
-	atlas_gloomshroom_die.load_atlas_resource(_T("resource/gloomshroom_die_%d.png"), 3);
-	atlas_gloomshroom_idle.load_atlas_resource(_T("resource/gloomshroom_idle_%d.png"), 4);
-	atlas_gloomshroom_attack_ex_right.load_atlas_resource(_T("resource/gloomshroom_attack_ex_%d.png"), 7);
-	filp_atlas(atlas_gloomshroom_attack_ex_right, atlas_gloomshroom_attack_ex_left);
-	atlas_gloomshroom_run_right.load_atlas_resource(_T("resource/gloomshroom_run_%d.png"), 3);
-	filp_atlas(atlas_gloomshroom_run_right, atlas_gloomshroom_run_left);
-
 	atlas_run_effect_right.load_atlas_resource(_T("resource/run_effect_%d.png"), 4);
 	filp_atlas(atlas_run_effect_right, atlas_run_effect_left);
 	atlas_jump_effect_right.load_atlas_resource(_T("resource/jump_effect_%d.png"), 5);
 	filp_atlas(atlas_jump_effect_right, atlas_jump_effect_left);
 	atlas_land_effect.load_atlas_resource(_T("resource/land_effect_%d.png"), 2);
 
+	// ÅÝÅÝ¹½
+	atlas_gloomshroom_die.load_atlas_resource(_T("resource/gloomshroom_die_%d.png"), 3);
+	atlas_gloomshroom_idle_right.load_atlas_resource(_T("resource/gloomshroom_idle_%d.png"), 4);
+	filp_atlas(atlas_gloomshroom_idle_right, atlas_gloomshroom_idle_left);
+	atlas_gloomshroom_attack_ex_right.load_atlas_resource(_T("resource/gloomshroom_attack_ex_%d.png"), 7);
+	filp_atlas(atlas_gloomshroom_attack_ex_right, atlas_gloomshroom_attack_ex_left);
+	atlas_gloomshroom_run_right.load_atlas_resource(_T("resource/gloomshroom_run_%d.png"), 3);
+	filp_atlas(atlas_gloomshroom_run_right, atlas_gloomshroom_run_left);
+
 	atlas_nut_run_right.load_atlas_resource(_T("resource/nut_run_%d.png"), 3);
 	filp_atlas(atlas_nut_run_right, atlas_nut_run_left);
 	atlas_nut_die.load_atlas_resource(_T("resource/nut_die_%d.png"), 3);
-	atlas_nut_idle.load_atlas_resource(_T("resource/nut_idle_%d.png"), 3);
+	atlas_nut_idle_right.load_atlas_resource(_T("resource/nut_idle_%d.png"), 3);
+	filp_atlas(atlas_nut_idle_right, atlas_nut_idle_left);
 	atlas_nut_explode.load_atlas_resource(_T("resource/nut_explode_%d.png"), 5);
 	atlas_nut_attack_ex.load_atlas_resource(_T("resource/nut_attack_ex_%d.png"), 5);
 
@@ -220,8 +234,9 @@ void load_game_resource() {
 	atlas_sun_ex_explode.load_atlas_resource(_T("resource/sun_ex_explode_%d.png"), 5);
 	atlas_sun_text.load_atlas_resource(_T("resource/sun_text_%d.png"), 6);
 
-	atlas_sunflower_idle_right.load_atlas_resource(_T("resource/sunflower_idle_%d.png"), 7);
-	atlas_sunflower_run_right.load_atlas_resource(_T("resource/sunflower_run_%d.png"), 2);
+	atlas_sunflower_idle_right.load_atlas_resource(_T("resource/sunflower_idle_%d.png"), 8);
+	filp_atlas(atlas_sunflower_idle_right, atlas_sunflower_idle_left);
+	atlas_sunflower_run_right.load_atlas_resource(_T("resource/sunflower_run_%d.png"), 5);
 	filp_atlas(atlas_sunflower_run_right, atlas_sunflower_run_left);
 	atlas_sunflower_die.load_atlas_resource(_T("resource/sunflower_die_%d.png"), 2);
 	atlas_sunflower_attack_ex.load_atlas_resource(_T("resource/sunflower_attack_ex_%d.png"), 9);
