@@ -1,8 +1,9 @@
-#pragma once
 #ifndef _ROLE_H_
 #define _ROLE_H_
 
 #include "Camera.h"
+#include "Bullet.h"
+#include "Timer.h"
 #include "Vector2.h"
 #include "RoleId.h"
 #include "Animation.h"
@@ -11,6 +12,7 @@
 #include <graphics.h>
 
 extern std::vector<Platform> Platform_list;
+extern std::vector<Bullet*> Bullet_list;
 
 class Role
 {
@@ -18,9 +20,19 @@ public:
 
 	Role() {
 		current_animation = &animation_idle_right;
+
+		timer_attack.set_wait_time(attack_cd);
+		timer_attack.set_one_shot(true);
+		timer_attack.set_callback([&]() {can_attack = true; });
+
+
 	}
 
 	~Role() = default;
+
+	virtual void on_attack() {}
+
+	virtual void on_attack_ex() {}
 
 	virtual void on_update(int interval_time) {
 
@@ -39,6 +51,8 @@ public:
 		}
 
 		current_animation->on_update(interval_time);
+
+		timer_attack.on_updata(interval_time);
 
 		move_and_collide(interval_time);
 	}
@@ -61,8 +75,20 @@ public:
 				case 0x57:
 					on_jump();
 					break;
-				default:
+				case 0x46:
+					if (can_attack) {
+						on_attack();
+						can_attack = false;
+						timer_attack.restart();
+					}
 					break;
+				case 0x47:
+					if (mp >= 100) {
+						on_attack_ex();
+						mp = 0;
+					}
+				default:
+					break; 
 				}
 				break;
 			case RoleId::P2:
@@ -77,6 +103,18 @@ public:
 				case VK_UP:
 					on_jump();
 					break;
+				case VK_OEM_PERIOD:
+					if (can_attack) {
+						on_attack();
+						can_attack = false;
+						timer_attack.restart();
+					}
+					break;
+				case VK_OEM_2:
+					if (mp >= 100) {
+						on_attack_ex();
+						mp = 0;
+					}
 				default:
 					break;
 				}
@@ -129,12 +167,16 @@ public:
 	}
 
 	virtual void on_run(float distance) {
+
+		if (is_attacking_ex)
+			return;
+
 		position.x += distance;
 	}
 
 	virtual void on_jump() {
 
-		if (velocity.y != 0)
+		if (velocity.y != 0 || is_attacking_ex)
 			return;
 		
 		velocity.y += role_jump_velocity;
@@ -191,6 +233,8 @@ protected:
 	Animation animation_idle_right;
 	Animation animation_run_left;				// 朝向左的奔跑动画
 	Animation animation_run_right;
+	Animation animation_attack_ex_left;
+	Animation animation_attack_ex_right;
 
 	RoleId role_id = RoleId::P1;
 
@@ -198,14 +242,25 @@ protected:
 	bool is_right_key_down = false;
 
 	bool is_facing_right = true;
+	bool is_attacking_ex = false;				// 是否正在释放特殊攻击
 
+	int attack_cd = 500;						// 普通攻击冷却时间
 protected:
 	const float	gravity = 1.6e-3f;				// 重力加速度
 	const float role_run_velocity = 0.55f;		// 玩家奔跑速度
 	const float role_jump_velocity = -0.85f;	// 跳跃速度
-	
+
+protected:
+	int mp = 0;
+	int hp = 100;
+
 private:
 	Animation* current_animation = nullptr;
+
+	bool can_attack = true;						// 是否可以释放普通攻击
+	Timer timer_attack;							// 普通攻击冷却定时器
+
+	
 
 };
 #endif // !_ROLE_H_

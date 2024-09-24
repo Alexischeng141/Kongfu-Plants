@@ -83,7 +83,7 @@ private:
 	int timer = 0;
 	int all_frame_number = 0;
 	int current_index_of_frame = 0;
-	bool is_loop = true;
+	bool is_loop = true;					// Ä¬ÈÏÑ­»·²¥·Å
 
 };
 

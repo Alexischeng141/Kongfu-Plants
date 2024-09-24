@@ -86,9 +86,9 @@ public:
 
 protected:
 	
-	Vector2 collisionBox;
-	Vector2 position;
-	Vector2 velocity;
+	Vector2 collisionBox = { 0,0 };
+	Vector2 position = { 0,0 };
+	Vector2 velocity = { 0,0 };
 
 	int damage = 10;
 	bool can_cause_damage = true;

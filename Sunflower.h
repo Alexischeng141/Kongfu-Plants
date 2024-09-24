@@ -8,6 +8,9 @@ extern Atlas atlas_sunflower_idle_left;
 extern Atlas atlas_sunflower_idle_right;
 extern Atlas atlas_sunflower_run_left;
 extern Atlas atlas_sunflower_run_right;
+extern Atlas atlas_sunflower_attack_ex_left;
+extern Atlas atlas_sunflower_attack_ex_right;
+extern Atlas atlas_sun_text;
 
 
 class Sunflower : public Role

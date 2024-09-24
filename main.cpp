@@ -2,6 +2,7 @@
 #include "Utils.h"
 #include "Atlas.h"
 #include "Role.h"
+#include "Bullet.h"
 #include "MenuScene.h"
 #include "GameScene.h"
 #include "platform.h"
@@ -104,7 +105,8 @@ Atlas atlas_peashooter_idle_left;
 Atlas atlas_peashooter_idle_right;
 Atlas atlas_peashooter_run_left;
 Atlas atlas_peashooter_run_right;
-Atlas atlas_peashooter_attack_ex;
+Atlas atlas_peashooter_attack_ex_right;
+Atlas atlas_peashooter_attack_ex_left;
 
 Atlas atlas_pea_break;
 
@@ -119,7 +121,8 @@ Atlas atlas_sunflower_idle_left;
 Atlas atlas_sunflower_idle_right;
 Atlas atlas_sunflower_run_left;
 Atlas atlas_sunflower_run_right;
-Atlas atlas_sunflower_attack_ex;
+Atlas atlas_sunflower_attack_ex_right;
+Atlas atlas_sunflower_attack_ex_left;
 
 scene* game_scene = nullptr;
 scene* menu_scene = nullptr;
@@ -129,6 +132,7 @@ Role* role_1 = nullptr;
 Role* role_2 = nullptr;
 
 std::vector<Platform> Platform_list;
+std::vector<Bullet*> Bullet_list;
 
 SceneManager _SM;
 Camera main_camera;
@@ -224,7 +228,8 @@ void load_game_resource() {
 	atlas_peashooter_die.load_atlas_resource(_T("resource/peashooter_die_%d.png"), 4);
 	atlas_peashooter_idle_right.load_atlas_resource(_T("resource/peashooter_idle_%d.png"), 9);
 	filp_atlas(atlas_peashooter_idle_right, atlas_peashooter_idle_left);
-	atlas_peashooter_attack_ex.load_atlas_resource(_T("resource/peashooter_attack_ex_%d.png"), 3);
+	atlas_peashooter_attack_ex_right.load_atlas_resource(_T("resource/peashooter_attack_ex_%d.png"), 3);
+	filp_atlas(atlas_peashooter_attack_ex_right, atlas_peashooter_attack_ex_left);
 
 	atlas_pea_break.load_atlas_resource(_T("resource/pea_break_%d.png"), 3);
 
@@ -239,7 +244,8 @@ void load_game_resource() {
 	atlas_sunflower_run_right.load_atlas_resource(_T("resource/sunflower_run_%d.png"), 5);
 	filp_atlas(atlas_sunflower_run_right, atlas_sunflower_run_left);
 	atlas_sunflower_die.load_atlas_resource(_T("resource/sunflower_die_%d.png"), 2);
-	atlas_sunflower_attack_ex.load_atlas_resource(_T("resource/sunflower_attack_ex_%d.png"), 9);
+	atlas_sunflower_attack_ex_right.load_atlas_resource(_T("resource/sunflower_attack_ex_%d.png"), 9);
+	filp_atlas(atlas_sunflower_attack_ex_right, atlas_sunflower_attack_ex_left);
 
 	mciSendString(_T("open resource/bgm_game.mp3 alias bgm_game"), NULL, 0, NULL);
 	mciSendString(_T("open resource/bgm_menu.mp3 alias bgm_menu"), NULL, 0, NULL);
