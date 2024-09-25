@@ -23,7 +23,7 @@ public:
 
 		timer_attack.set_wait_time(attack_cd);
 		timer_attack.set_one_shot(true);
-		timer_attack.set_callback([&]() {can_attack = true; });
+		timer_attack.set_callback([&]() { can_attack = true; });
 
 
 	}
@@ -191,6 +191,14 @@ public:
 		this->position.y = y;
 	}
 
+	const Vector2& get_position() const {
+		return position;
+	}
+
+	const Vector2& get_role_collision_box() const {
+		return role_collision_box;
+	}
+
 protected:
 	void move_and_collide(int delta) {
 		velocity.y += gravity * delta;			// 速度存储器记录了y方向上的速度分量
@@ -210,13 +218,23 @@ protected:
 					if (pre_position_y <= platform_collision_box.y) {
 						position.y = platform_collision_box.y - role_collision_box.y;
 						velocity.y = 0;
-
-
 						break;
 					}
 				}
 			}
 		}
+
+		for (Bullet* bullet : Bullet_list) {
+			if (!bullet->getCanCauseDamage() || bullet->getCollideTargetId() == this->role_id)
+				continue;
+			
+			if (bullet->checkCollisionBox(position, role_collision_box)) {
+				bullet->on_collide();
+				bullet->setCanCauseDamage(false);
+				hp -= bullet->getDamage();
+			}
+		}
+
 	}
 
 	// 碰撞判定成功的条件：

@@ -14,7 +14,7 @@ extern Atlas atlas_peashooter_run_right;
 extern Atlas atlas_peashooter_attack_ex_right;
 extern Atlas atlas_peashooter_attack_ex_left;
 
-extern Camera main_camera;
+// extern Camera main_camera;
 
 
 class Peashooter : public Role 
@@ -53,6 +53,7 @@ public:
 	~Peashooter() = default;
 
 	void on_update(int interval_time) {
+
 		Role::on_update(interval_time);
 
 		if (is_attacking_ex) {
@@ -68,9 +69,12 @@ public:
 
 	void on_draw(const Camera& camera) {
 		Role::on_draw(camera);
+
+		
 	}
 
 	void on_attack() {
+
 		spawn_pea_bullet(speed_pea);
 
 		switch (rand() % 2)
@@ -110,7 +114,7 @@ private:
 			: position.x - bullet_collisionBox.x / 2;
 		bullet_position.y = position.y;
 
-		bullet_position.x = is_facing_right ? speed : -speed;
+		bullet_velocity.x = is_facing_right ? speed : -speed;
 		bullet_velocity.y = 0;
 
 		bullet->setPosition(bullet_position.x, bullet_position.y);

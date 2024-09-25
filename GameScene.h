@@ -16,7 +16,7 @@ extern IMAGE img_platform_small;
 
 extern std::vector<Platform> Platform_list;
 
-extern Camera camera;
+extern Camera main_camera;
 
 extern Role* role_1;
 extern Role* role_2;
@@ -104,6 +104,23 @@ public:
 	void OnUpdate(int interval_time) {
 		role_1->on_update(interval_time);
 		role_2->on_update(interval_time);
+
+		main_camera.on_updata(interval_time);
+
+		for (Bullet* bullet : Bullet_list)
+			bullet->on_update(interval_time);
+
+		Bullet_list.erase(std::remove_if(Bullet_list.begin(), Bullet_list.end(), [](const Bullet* bullet) {
+			bool deletable = bullet->checkCanReMove();
+			if (deletable) {
+				delete bullet;
+			}
+			return deletable;
+			}), Bullet_list.end());
+
+			for (Bullet* bullet : Bullet_list) {
+				bullet->on_update(interval_time);
+			}
 	}
 
 	void OnDraw(const Camera& camera) {
@@ -125,6 +142,9 @@ public:
 		// ½ÇÉ«äÖÈ¾
 		role_1->on_draw(camera);
 		role_2->on_draw(camera);
+
+		for (const Bullet* bullet : Bullet_list)
+			bullet->on_draw(camera);
 
 	}
 

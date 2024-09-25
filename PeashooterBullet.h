@@ -20,7 +20,7 @@ public:
 		animation_pea_break.set_atlas(&atlas_pea_break);
 		animation_pea_break.set_inter_time(100);
 		animation_pea_break.set_loop(false);
-		animation_pea_break.set_callback([&]() {can_remove = true; });
+		animation_pea_break.set_callback([&]() { can_remove = true; });
 
 
 	}
@@ -67,10 +67,6 @@ public:
 		{	
 			animation_pea_break.on_draw(camera, (int)position.x, (int)position.y);
 		}
-	}
-
-	void on_attack() {
-
 	}
 
 
