@@ -76,6 +76,7 @@ void SunflowerBulletEx::on_collide() {
 }
 
 void SunflowerBulletEx::on_update(int delta) { 
+	
 	if (getCanCauseDamage()) {
 		position += velocity * (float)delta;
 	}

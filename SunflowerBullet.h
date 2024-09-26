@@ -45,7 +45,7 @@ SunflowerBullet::SunflowerBullet()
 	animation_explode.set_atlas(&atlas_sun_explode);
 	animation_explode.set_inter_time(50);
 	animation_explode.set_loop(false);
-	animation_explode.set_callback([&]() {can_remove = true; });
+	animation_explode.set_callback([&]() { can_remove = true; });
 
 
 	IMAGE* frame_idle = animation_idle.get_current_frame();
@@ -72,16 +72,16 @@ void SunflowerBullet::on_collide() {
 
 void SunflowerBullet::on_update(int delta) {
 
-	if (getCanCauseDamage()) {
+	if (can_cause_damage) {
 		velocity.y += gravity * delta;
 		position += velocity * (float)delta;
 	}
 
-	if (!can_cause_damage) {
+	if (can_cause_damage) {
 		animation_idle.on_update(delta);
 	}
 	else {
-		animation_idle.on_update(delta);
+		animation_explode.on_update(delta);
 	}
 
 	if (checkIsExceedScreen()) {
@@ -99,7 +99,6 @@ void SunflowerBullet::on_draw(const Camera& camera) const {
 		animation_explode.on_draw(camera, 
 			(int)(position.x + explode_render_offset.x), 
 			(int)(position.y + explode_render_offset.y));
-
 	}
 }
 

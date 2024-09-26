@@ -58,7 +58,7 @@ public:
 			is_sun_text_visible = false;
 			});
 
-		attack_cd = 100;
+		attack_cd = 250;
 		
 	}
 
@@ -81,6 +81,7 @@ public:
 	}
 
 	void on_draw(const Camera& camera) {
+
 		Role::on_draw(camera);
 
 		if (is_sun_text_visible) {
@@ -88,7 +89,7 @@ public:
 			IMAGE* frame = animation_sun_text.get_current_frame();
 			text_position.x = position.x - (role_collision_box.x - frame->getwidth()) / 2;
 			text_position.y = position.y - frame->getheight();
-
+			animation_sun_text.on_draw(camera, (int)text_position.x, (int)text_position.y);
 		}
 	}
 
@@ -106,6 +107,8 @@ public:
 
 		bullet->setCallback([&]() { mp += 35; });
 		Bullet_list.push_back(bullet);
+
+		mciSendString(_T("play sun_explod_ex from 0"), NULL, 0, NULL);
 	}
 
 	void on_attack_ex() {

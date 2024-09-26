@@ -75,6 +75,7 @@ public:
 
 	void on_attack() {
 
+		// 每次调用函数都会生成一个子弹实例
 		spawn_pea_bullet(speed_pea);
 
 		switch (rand() % 2)
@@ -117,13 +118,13 @@ private:
 		bullet_velocity.x = is_facing_right ? speed : -speed;
 		bullet_velocity.y = 0;
 
-		bullet->setPosition(bullet_position.x, bullet_position.y);
-		bullet->setVelocity(bullet_velocity.x, bullet_velocity.y);
+		bullet->setPosition(bullet_position.x, bullet_position.y);			// 设置子弹生成位置
+		bullet->setVelocity(bullet_velocity.x, bullet_velocity.y);			// 设置子弹物理模拟
 
-		bullet->setCollideTarget(role_id == RoleId::P1 ? RoleId::P2 : RoleId::P1);
+		bullet->setCollideTarget(role_id == RoleId::P1 ? RoleId::P2 : RoleId::P1);		// 设置子弹碰撞判定条件
 		bullet->setCallback([&]() { mp += 25; });
 
-		Bullet_list.push_back(bullet);
+		Bullet_list.push_back(bullet);		// 所有生成的子弹储存在vector容器中便于管理
 	}
 
 private:

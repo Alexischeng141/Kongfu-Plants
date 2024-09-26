@@ -224,14 +224,20 @@ protected:
 			}
 		}
 
+		
 		for (Bullet* bullet : Bullet_list) {
-			if (!bullet->getCanCauseDamage() || bullet->getCollideTargetId() == this->role_id)
+
+			// 在Bullet_list容器中管理着场景中所有的子弹所以要检测所有target_id与自身id匹配的子弹并跳出
+			if (!bullet->getCanCauseDamage() || bullet->getCollideTargetId() != role_id)
 				continue;
 			
+			// 在所有target_id不与自身id匹配的子弹中检测是否发生碰撞
+			// target_id与自身不匹配即是当前角色自己发射的子弹
+			// 说人话就是在子弹容器中查找出自己角色发射出的子弹
 			if (bullet->checkCollisionBox(position, role_collision_box)) {
-				bullet->on_collide();
-				bullet->setCanCauseDamage(false);
-				hp -= bullet->getDamage();
+				bullet->on_collide();	// 碰撞方法
+				bullet->setCanCauseDamage(false);	// 设置可造成伤害状态位false
+				hp -= bullet->getDamage();			// 
 			}
 		}
 

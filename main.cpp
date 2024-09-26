@@ -132,7 +132,7 @@ Role* role_1 = nullptr;
 Role* role_2 = nullptr;
 
 std::vector<Platform> Platform_list;
-std::vector<Bullet*> Bullet_list;
+std::vector<Bullet*> Bullet_list;			// 子弹容器中管理着场景中所有的子弹
 
 SceneManager _SM;
 Camera main_camera;

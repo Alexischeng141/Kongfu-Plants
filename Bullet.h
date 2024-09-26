@@ -69,6 +69,7 @@ public:
 		}
 	}
 
+	// 传入玩家的位置和碰撞箱
 	virtual bool checkCollisionBox(const Vector2& position, const Vector2& collisionBox) {
 		return this->position.x + this->collisionBox.x / 2 >= position.x
 			&& this->position.x + this->collisionBox.x / 2 <= position.x + collisionBox.x
@@ -86,17 +87,17 @@ public:
 
 protected:
 	
-	Vector2 collisionBox = { 0,0 };
-	Vector2 position = { 0,0 };
-	Vector2 velocity = { 0,0 };
+	Vector2 collisionBox = { 0,0 };			// 子弹的碰撞箱
+	Vector2 position = { 0,0 };				// 子弹的位置
+	Vector2 velocity = { 0,0 };				// 子弹的速度
 
-	int damage = 10;
-	bool can_cause_damage = true;
-	bool can_remove = false;
+	int damage = 10;						// 伤害
+	bool can_cause_damage = true;			// 是否能造成伤害
+	bool can_remove = false;				// 是否能被移除
 	
-	std::function<void()> callback;		// 子弹碰撞时回调函数
+	std::function<void()> callback;			// 子弹碰撞时回调函数
 	
-	RoleId targetId = RoleId::P1;
+	RoleId targetId = RoleId::P1;			// 攻击目标
 
 protected:
 	

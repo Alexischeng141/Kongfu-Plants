@@ -110,6 +110,7 @@ public:
 		for (Bullet* bullet : Bullet_list)
 			bullet->on_update(interval_time);
 
+		// 对已经失效的子弹进行清理
 		Bullet_list.erase(std::remove_if(Bullet_list.begin(), Bullet_list.end(), [](const Bullet* bullet) {
 			bool deletable = bullet->checkCanReMove();
 			if (deletable) {
@@ -118,9 +119,9 @@ public:
 			return deletable;
 			}), Bullet_list.end());
 
-			for (Bullet* bullet : Bullet_list) {
-				bullet->on_update(interval_time);
-			}
+		for (Bullet* bullet : Bullet_list) {
+			bullet->on_update(interval_time);
+		}
 	}
 
 	void OnDraw(const Camera& camera) {
@@ -143,6 +144,7 @@ public:
 		role_1->on_draw(camera);
 		role_2->on_draw(camera);
 
+		// 子弹渲染
 		for (const Bullet* bullet : Bullet_list)
 			bullet->on_draw(camera);
 
