@@ -8,6 +8,8 @@ extern Atlas atlas_gloomshroom_idle_left;
 extern Atlas atlas_gloomshroom_idle_right;
 extern Atlas atlas_gloomshroom_run_left;
 extern Atlas atlas_gloomshroom_run_right;
+extern Atlas atlas_gloomshroom_attack_ex_left;
+extern Atlas atlas_gloomshroom_attack_ex_right;
 
 class Gloomshroom : public Role
 {
@@ -40,6 +42,14 @@ public:
 
 	void on_draw(const Camera& camera) {
 		Role::on_draw(camera);
+	}
+
+	void on_attack() {
+
+	}
+
+	void on_attack_ex() {
+
 	}
 
 private:
