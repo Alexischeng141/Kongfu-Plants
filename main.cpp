@@ -15,7 +15,7 @@
 
 #define WIN_WIDHT 1280
 #define WIN_HEIGHT 720
-#define STANDAR_FRAME_INTERVAL_TIME 1000 / 90
+#define STANDAR_FRAME_INTERVAL_TIME 1000 / 60
 
 bool is_debug = false;
 

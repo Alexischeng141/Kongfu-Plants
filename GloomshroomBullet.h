@@ -41,7 +41,7 @@ private:
 GloomshroomBullet::GloomshroomBullet()
 {
 	damage = 10;
-
+	
 	animation_bubble.set_atlas(&atlas_bubbles);
 	animation_bubble.set_inter_time(75);
 	animation_bubble.set_loop(false);

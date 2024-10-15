@@ -24,9 +24,9 @@ public:
 	void on_draw(const Camera& camera) const;
 
 private:
-	Animation animation_idle;
-	Animation animation_explode;
-	Vector2 explode_render_offset;		// 爆炸动画位置修正
+	Animation animation_idle;			// 子弹默认动画
+	Animation animation_explode;		// 子弹爆炸动画
+	Vector2 explode_render_offset;		// 子弹爆炸动画位置修正
 
 private:
 	const float gravity = 1e-3f;		// 龙日葵炸弹的重力
@@ -43,7 +43,7 @@ SunflowerBullet::SunflowerBullet()
 	animation_idle.set_inter_time(50);
 
 	animation_explode.set_atlas(&atlas_sun_explode);
-	animation_explode.set_inter_time(50);
+	animation_explode.set_inter_time(100);
 	animation_explode.set_loop(false);
 	animation_explode.set_callback([&]() { can_remove = true; });
 

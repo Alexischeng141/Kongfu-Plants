@@ -153,6 +153,7 @@ private:
 
 	Animation animation_sun_text;
 	bool is_sun_text_visible = false;
+	playerType playertype = playerType::sunFlower;
 
 };
 

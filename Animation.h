@@ -22,8 +22,8 @@ public:
 
 
 	void reset() {
-		timer = 0;
-		stander_interval_time = 0;
+		this->timer = 0;
+		this->current_index_of_frame = 0;
 	}
 
 	void set_atlas(Atlas* const atlas_for_animation) {
@@ -64,14 +64,13 @@ public:
 	void on_update(int interval_time) {
 		timer += interval_time;
 		if (timer >= stander_interval_time) {
-			timer = 0;
+			timer -= stander_interval_time;
 			current_index_of_frame++;
 			if (current_index_of_frame >= atlas_for_animation->get_frame_size()) {
 				current_index_of_frame = is_loop ? 0 : atlas_for_animation->get_frame_size() - 1;
 				if (!is_loop && callback) {		// 如果动画帧索引到达图集尾部，并且没有设置循环播放，以及回调函数存在则执行回调函数
 					callback();
-					this->reset();
-					current_index_of_frame = 0;
+					this->timer = 0;
 				}
 			}
 		}
@@ -79,6 +78,7 @@ public:
 
 	int on_update(int interval_time, bool is_return) {
 		if (is_return) {
+			std::cout << "Timer: " << timer << ", Interval: " << stander_interval_time << std::endl;
 			timer += interval_time;
 			if (timer >= stander_interval_time) {
 				timer = 0;
@@ -96,18 +96,14 @@ public:
 		return current_index_of_frame;
 	}
 
-	int get_max_frame_number() {
-		return atlas_for_animation->get_frame_size();
-	}
 
 private:
 	Atlas* atlas_for_animation = nullptr;
 	std::function<void()> callback;
-	int stander_interval_time = 0;
-	int timer = 0;
-	int all_frame_number = 0;
-	int current_index_of_frame = 0;
-	bool is_loop = true;					// 默认循环播放
+	int stander_interval_time = 0;			// 每一帧动画播放时间
+	int timer = 0;							// 当前帧已经播放的时间
+	int current_index_of_frame = 0;			// 当前帧索引
+	bool is_loop = true;					// 是否循环播放（默认循环播放）
 
 };
 

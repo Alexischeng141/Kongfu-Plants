@@ -41,7 +41,7 @@ SunflowerBulletEx::SunflowerBulletEx()
 	animation_ex.set_inter_time(50);
 	
 	animation_ex_explode.set_atlas(&atlas_sun_ex_explode);
-	animation_ex_explode.set_inter_time(50);
+	animation_ex_explode.set_inter_time(100);
 	animation_ex_explode.set_loop(false);
 	animation_ex_explode.set_callback([&]() {can_remove = true; });
 

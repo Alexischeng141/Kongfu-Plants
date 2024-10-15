@@ -1,3 +1,4 @@
+#pragma once
 #ifndef _ROLE_H_
 #define _ROLE_H_
 
@@ -66,9 +67,11 @@ public:
 
 		// 玩家处于特殊攻击状态时改变current_animation指针
 		if (is_attacking_ex)
+		{
 			current_animation = is_facing_right ? &animation_attack_ex_right : &animation_attack_ex_left;
-
-		current_animation->on_update(interval_time);
+		}
+		
+		current_animation->on_update(interval_time);			// 更新动画帧
 
 		timer_attack.on_updata(interval_time);
 		timer_invulnerable.on_updata(interval_time);
@@ -292,6 +295,17 @@ protected:
 		is_invulnerable = true;
 		timer_invulnerable.restart();
 	}
+
+protected:
+	enum playerType
+	{
+		defaulttype = 0,
+		peashooter,
+		sunFlower,
+		nut,
+		gloomshroom
+	};
+
 
 protected:
 	Vector2 position = { 0,0 };					// 角色位置

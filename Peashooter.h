@@ -136,6 +136,7 @@ private:
 	
 	Timer timer_attack_ex;					// 特殊攻击定时器，用于控制整个特殊攻击的持续时间 
 	Timer timer_spwan_pea_ex;				// 特殊豌豆子弹发射定时器，用于控制特殊攻击状态下每颗子弹的生成的间隔时间
+	playerType playertype = playerType::peashooter;
 
 };
 

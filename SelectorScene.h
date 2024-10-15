@@ -1,3 +1,4 @@
+#pragma once
 #ifndef _SELECTORSCENE_H_
 #define _SELECTORSCENE_H_
 
