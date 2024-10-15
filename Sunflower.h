@@ -65,6 +65,7 @@ public:
 	~Sunflower() = default;
 
 	void on_update(int interval_time) {
+
 		Role::on_update(interval_time);
 
 		if (is_sun_text_visible) {
@@ -123,9 +124,9 @@ public:
 
 		Vector2 bullet_position;
 		Vector2 bullet_velocity;
-		const Vector2& bullet_collision_box = bullet->getCollisionBox();
-		const Vector2& target_collision_box = target_role->get_role_collision_box();
-		const Vector2& target_position = target_role->get_position();
+		const Vector2& bullet_collision_box = bullet->getCollisionBox();						// 子弹的碰撞箱
+		const Vector2& target_collision_box = target_role->get_role_collision_box();			// 目标角色碰撞箱
+		const Vector2& target_position = target_role->get_position();							// 目标角色的位置
 
 		bullet_position.x = target_position.x + (target_collision_box.x - bullet_collision_box.x) / 2;
 		bullet_position.y = -role_collision_box.y;

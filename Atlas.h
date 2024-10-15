@@ -20,6 +20,8 @@ public:
 		image_list.clear();
 		image_list.resize(frame_number);
 
+		max_frame = frame_number;
+
 		TCHAR file_path[256];
 		for (int i = 0; i < frame_number; i++) {
 			_stprintf_s(file_path, file_path_format, i + 1);
@@ -48,6 +50,7 @@ public:
 
 private:
 	std::vector<IMAGE> image_list;
+	int max_frame = 0;
 
 };
 #endif // !ATLAS_H_

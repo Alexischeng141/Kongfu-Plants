@@ -69,7 +69,6 @@ void SunflowerBullet::on_collide() {
 	mciSendString(_T("play sun_explode from 0"), NULL, 0, NULL);
 }
 
-
 void SunflowerBullet::on_update(int delta) {
 
 	if (can_cause_damage) {
@@ -91,6 +90,7 @@ void SunflowerBullet::on_update(int delta) {
 }
 
 void SunflowerBullet::on_draw(const Camera& camera) const {
+	
 	if (can_cause_damage) {
 		animation_idle.on_draw(camera, (int)position.x, (int)position.y);
 	}
@@ -100,6 +100,8 @@ void SunflowerBullet::on_draw(const Camera& camera) const {
 			(int)(position.x + explode_render_offset.x), 
 			(int)(position.y + explode_render_offset.y));
 	}
+
+	Bullet::on_draw(camera);
 }
 
 #endif // !_SUNFLOWERBULLET_H_

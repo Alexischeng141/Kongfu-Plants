@@ -93,6 +93,12 @@
     <ClInclude Include="SunflowerBulletEx.h">
       <Filter>头文件\bullet</Filter>
     </ClInclude>
+    <ClInclude Include="Circle.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="GloomshroomBulletEx.h">
+      <Filter>头文件\bullet</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Atlas.h">

@@ -60,5 +60,37 @@ inline void on_draw_line(const Camera& camera, int x_left, int y_left, int x_rig
 	line((int)(x_left - pos_camera.x), (int)(y_left - pos_camera.y), (int)(x_right - pos_camera.x), (int)(y_right - pos_camera.y));
 }
 
+// 将帧动画处理成素描效果
+inline void sketch_image(IMAGE* src, IMAGE* dst) {
+	int w = src->getwidth();
+	int h = src->getheight();
+	Resize(dst, w, h);
+	DWORD* src_buffer = GetImageBuffer(src);
+	DWORD* dst_buffer = GetImageBuffer(dst);
+	for (int y = 0; y < h; y++) {
+		for (int x = 0; x < w; x++) {
+
+			/*
+			
+			公式 idx = y * w + x 是二维数组（或图像）中计算线性索引的常用方法。
+			对于图像来说，图像数据通常以一维数组形式存储，但图像本身是二维的。
+			因此，需要一个公式将二维坐标转换为一维索引。
+
+			y 表示行（即高度方向上的位置），而 x 表示列（即宽度方向上的位置）。
+			每一行有 w 个像素。
+			对于某一行 y，它前面有 y 行，每一行有 w 个像素，因此前 y 行共有 y * w 个像素。
+			
+			y * w 是前面所有行的像素数量总和。
+			在行 y 中，再加上列位置 x，就可以精确找到图像中该点的线性索引：idx = y * w + x。
+			示例
+			
+			*/
+
+			int idx = y * w + x;
+			dst_buffer[idx] = BGR(RGB(255, 255, 255)) | (src_buffer[idx] & 0xff000000);
+		}
+	}
+}
+
 #endif // !_UTILS_H_
 

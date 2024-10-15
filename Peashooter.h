@@ -56,7 +56,7 @@ public:
 
 		Role::on_update(interval_time);
 
-		if (is_attacking_ex) {
+		if (is_attacking_ex) {			// 在on_attack_ex方法中is_attacking_ex被设为true
 			main_camera.shake(5, 100);
 			timer_attack_ex.on_updata(interval_time);
 			timer_spwan_pea_ex.on_updata(interval_time);
@@ -73,7 +73,7 @@ public:
 		
 	}
 
-	void on_attack() {
+	void on_attack() override {
 
 		// 每次调用函数都会生成一个子弹实例
 		spawn_pea_bullet(speed_pea);
@@ -91,10 +91,10 @@ public:
 		}
 	}
 
-	void on_attack_ex() {
+	void on_attack_ex() override {
 		is_attacking_ex = true;
 		timer_attack_ex.restart();
-
+		timer_spwan_pea_ex.restart();
 		is_facing_right ? animation_attack_ex_right.reset() : animation_attack_ex_left.reset();
 		mciSendString(_T("play pea_shoot_ex from 0"), NULL, 0, NULL);
 	}
@@ -105,7 +105,7 @@ private:
 	void spawn_pea_bullet(float speed) {
 		Bullet* bullet = new PeashooterBullet();
 
-		Vector2 bullet_position;
+		Vector2 bullet_position;  
 		Vector2 bullet_velocity = { 0,0 };
 
 		const Vector2& bullet_collisionBox = bullet->getCollisionBox();
@@ -129,13 +129,13 @@ private:
 
 private:
 
-	const float speed_pea = 0.75f;
-	const float speed_pea_ex = 1.5f;
-	const int attack_ex_duration = 2500;		// 特殊攻击持续时间
+	const float speed_pea = 0.75f;			// 普通子弹速度
+	const float speed_pea_ex = 1.5f;		// 特殊攻击时子弹速度
+	const int attack_ex_duration = 2500;	// 特殊攻击持续时间
 private:
 	
-	Timer timer_attack_ex;						// 特殊攻击定时器
-	Timer timer_spwan_pea_ex;					// 豌豆子弹发射定时器
+	Timer timer_attack_ex;					// 特殊攻击定时器，用于控制整个特殊攻击的持续时间 
+	Timer timer_spwan_pea_ex;				// 特殊豌豆子弹发射定时器，用于控制特殊攻击状态下每颗子弹的生成的间隔时间
 
 };
 

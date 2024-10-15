@@ -11,6 +11,8 @@
 
 #include <graphics.h>
 
+extern bool is_debug;
+
 extern std::vector<Platform> Platform_list;
 extern std::vector<Bullet*> Bullet_list;
 
@@ -19,11 +21,22 @@ class Role
 public:
 
 	Role() {
+
 		current_animation = &animation_idle_right;
 
 		timer_attack.set_wait_time(attack_cd);
 		timer_attack.set_one_shot(true);
 		timer_attack.set_callback([&]() { can_attack = true; });
+
+		timer_invulnerable.set_wait_time(750);
+		timer_invulnerable.set_one_shot(true);
+		timer_invulnerable.set_callback([&]() { is_invulnerable = false; });
+
+		timer_invulnerable_blink.set_wait_time(750);
+		timer_invulnerable_blink.set_one_shot(true);
+		timer_invulnerable_blink.set_callback([&]() { 
+			is_showing_invulnerable_frame = !is_showing_invulnerable_frame; 
+		});
 
 
 	}
@@ -40,19 +53,30 @@ public:
 
 		if (move_direction != 0) {
 			// 玩家移动时播放移动动画
-			is_facing_right = move_direction > 0;
+			if (!is_attacking_ex)
+				is_facing_right = move_direction > 0;
 			current_animation = is_facing_right ? &animation_run_right : &animation_run_left;
 			float distance = move_direction * role_run_velocity * interval_time;
 			on_run(distance);
 		}
 		else {
-			// 玩家无移动是播放角色待机动画
+			// 玩家无位移时播放角色待机动画
 			current_animation = is_facing_right ? &animation_idle_right : &animation_idle_left;
 		}
+
+		// 玩家处于特殊攻击状态时改变current_animation指针
+		if (is_attacking_ex)
+			current_animation = is_facing_right ? &animation_attack_ex_right : &animation_attack_ex_left;
 
 		current_animation->on_update(interval_time);
 
 		timer_attack.on_updata(interval_time);
+		timer_invulnerable.on_updata(interval_time);
+		timer_invulnerable_blink.on_updata(interval_time);
+
+		if (is_showing_invulnerable_frame) {
+			sketch_image(current_animation->get_current_frame(), &img_sketch);
+		}
 
 		move_and_collide(interval_time);
 	}
@@ -163,7 +187,18 @@ public:
 	}
 
 	virtual void on_draw(const Camera & camera) {
-		current_animation->on_draw(camera, (int)position.x, (int)position.y);
+
+		if (hp > 0 && is_invulnerable && is_showing_invulnerable_frame) {
+			putimage_alpha(camera, (int)position.x, (int)position.y, &img_sketch);
+		}
+		else {
+			current_animation->on_draw(camera, (int)position.x, (int)position.y);
+		}
+
+		if (is_debug) {
+			setlinecolor(RGB(0, 125, 255));
+			rectangle((int)position.x, (int)position.y, (int)(position.x + role_collision_box.x), (int)(position.y + role_collision_box.y));
+		}
 	}
 
 	virtual void on_run(float distance) {
@@ -199,6 +234,10 @@ public:
 		return role_collision_box;
 	}
 
+	RoleId getRoleId() {
+		return this->role_id;
+	}
+
 protected:
 	void move_and_collide(int delta) {
 		velocity.y += gravity * delta;			// 速度存储器记录了y方向上的速度分量
@@ -224,20 +263,21 @@ protected:
 			}
 		}
 
-		
-		for (Bullet* bullet : Bullet_list) {
+		// 不处于无敌状态时
+		if (!is_invulnerable) {
+			for (Bullet* bullet : Bullet_list) {
 
-			// 在Bullet_list容器中管理着场景中所有的子弹所以要检测所有target_id与自身id匹配的子弹并跳出
-			if (!bullet->getCanCauseDamage() || bullet->getCollideTargetId() != role_id)
-				continue;
-			
-			// 在所有target_id不与自身id匹配的子弹中检测是否发生碰撞
-			// target_id与自身不匹配即是当前角色自己发射的子弹
-			// 说人话就是在子弹容器中查找出自己角色发射出的子弹
-			if (bullet->checkCollisionBox(position, role_collision_box)) {
-				bullet->on_collide();	// 碰撞方法
-				bullet->setCanCauseDamage(false);	// 设置可造成伤害状态位false
-				hp -= bullet->getDamage();			// 
+				// 在Bullet_list容器找出所有作用与自身的子弹
+				if (!bullet->getCanCauseDamage() || bullet->getCollideTargetId() != role_id)
+					continue;
+				
+				// 判定是否发生碰撞
+				if (bullet->checkCollisionBox(position, role_collision_box)) {
+					make_invulnerable();
+					bullet->on_collide();	
+					bullet->setCanCauseDamage(false);			// 设置可造成伤害状态为false 
+					hp -= bullet->getDamage();			 
+				}
 			}
 		}
 
@@ -246,6 +286,12 @@ protected:
 	// 碰撞判定成功的条件：
 	// 上一帧平台的y坐标小于角色碰撞箱底部y坐标
 	// 下一帧平台的y坐标大于角色碰撞箱底部y坐标
+
+	// 设置玩家为无敌状态
+	void make_invulnerable() {
+		is_invulnerable = true;
+		timer_invulnerable.restart();
+	}
 
 protected:
 	Vector2 position = { 0,0 };					// 角色位置
@@ -257,7 +303,7 @@ protected:
 	Animation animation_idle_right;
 	Animation animation_run_left;				// 朝向左的奔跑动画
 	Animation animation_run_right;
-	Animation animation_attack_ex_left;
+	Animation animation_attack_ex_left;			// 特殊攻击角色动画
 	Animation animation_attack_ex_right;
 
 	RoleId role_id = RoleId::P1;
@@ -275,16 +321,23 @@ protected:
 	const float role_jump_velocity = -0.85f;	// 跳跃速度
 
 protected:
-	int mp = 0;
-	int hp = 100;
+	int mp = 0;									// 技能值
+	int hp = 100;								// 生命值
 
 private:
+
+	IMAGE img_sketch;
 	Animation* current_animation = nullptr;
 
+	bool is_alive = true;
 	bool can_attack = true;						// 是否可以释放普通攻击
-	Timer timer_attack;							// 普通攻击冷却定时器
+	bool is_invulnerable = false;				// 角色是否处于无敌状态
+	bool is_showing_invulnerable_frame = false;	// 当前帧是否应该显示剪影
 
-	
+	Timer timer_attack;							// 普通攻击冷却定时器
+	Timer timer_attack_ex;						// 必杀技持续时间定时器
+	Timer timer_invulnerable;					// 无敌状态定时器
+	Timer timer_invulnerable_blink;				// 无敌状态闪烁定时器
 
 };
 #endif // !_ROLE_H_

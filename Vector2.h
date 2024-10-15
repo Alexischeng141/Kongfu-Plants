@@ -26,7 +26,7 @@ public:
 	}
 
 	Vector2 operator-(const Vector2& vec) const {
-		return Vector2(x + vec.x, y + vec.y);
+		return Vector2(x - vec.x, y - vec.y);
 	}
 
 	void operator-=(const Vector2& vec) {
@@ -42,12 +42,12 @@ public:
 		return Vector2(x * val, y * val);
 	}
 
-	void operator*=(float val) const {
-		x + val, y + val;
+	void operator*=(float val) {
+		x *= val, y *= val;
 	}
 
 	// 获取向量的长度
-	float length() {
+	float length() const {
 		return sqrt(x * x + y * y);
 	}
 
@@ -58,7 +58,7 @@ public:
 	}
 
 	// 向量标准化
-	Vector2 normalize() {
+	Vector2 normalize() const {
 		float len = length();
 		if (len == 0)
 			return Vector2(0, 0);

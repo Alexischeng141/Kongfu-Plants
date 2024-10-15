@@ -1,28 +1,31 @@
-#pragma once
 #ifndef _TIMER_H_
-#define _TIMER_H	
+#define _TIMER_H_
 #include <functional>
 
-// 计时器基类
+// 定时器基类
 class Timer
 {
 public:
 	Timer() = default;
 	~Timer() = default;
 
+	// 重置定时器<is_shoted;passed_time>
 	void restart() {
 		passed_time = 0;
 		is_shotted = false;
 	}
 
+	// 设置定时器
 	void set_wait_time(int wait_time) {
 		this->wait_time = wait_time;
 	}
 
+	// 设置单次触发
 	void set_one_shot(bool flag) {
 		is_one_shot = flag;
 	}
 
+	// 设置暂停
 	void pause() {
 		is_paused = true;
 	}
@@ -32,7 +35,10 @@ public:
 			return;
 		passed_time += val;
 		if (passed_time >= wait_time) {
-			if (((!is_one_shot) || (is_one_shot && !is_shotted)) && callback) {	// 不是单次触发且回调函数存在或者是单次触发（计时器未触发）且回调函数存在
+			// 这里主要是要考虑定时器有没有被触发
+			// 如果定时器是可以多次触发则不需要考虑有没有被触发过
+			// 如果定时器是单次触发的则需要考虑是否已经被触发过
+			if (((!is_one_shot) || (is_one_shot && !is_shotted)) && callback) {	
 				callback();
 				is_shotted = true;
 				passed_time = 0;
@@ -40,7 +46,7 @@ public:
 		}
 	}
 
-	// 解除暂停
+	// 恢复暂停
 	void resume() {
 		is_paused = false;
 	}

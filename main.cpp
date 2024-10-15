@@ -15,7 +15,7 @@
 
 #define WIN_WIDHT 1280
 #define WIN_HEIGHT 720
-#define STANDAR_FRAME_INTERVAL_TIME 1000 / 60
+#define STANDAR_FRAME_INTERVAL_TIME 1000 / 90
 
 bool is_debug = false;
 
@@ -131,7 +131,7 @@ scene* selector_scene = nullptr;
 Role* role_1 = nullptr;
 Role* role_2 = nullptr;
 
-std::vector<Platform> Platform_list;
+std::vector<Platform> Platform_list;		// 场景中所中平台的管理容器
 std::vector<Bullet*> Bullet_list;			// 子弹容器中管理着场景中所有的子弹
 
 SceneManager _SM;

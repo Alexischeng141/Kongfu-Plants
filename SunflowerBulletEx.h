@@ -27,7 +27,6 @@ private:
 
 	Animation animation_ex_explode;
 	Animation animation_ex;
-	Animation animation_text;
 	
 	Vector2 explode_render_ex = { 0,0 };
 	
@@ -35,6 +34,9 @@ private:
 
 SunflowerBulletEx::SunflowerBulletEx()
 {
+	collisionBox.x = 288;
+	collisionBox.y = 288;
+
 	animation_ex.set_atlas(&atlas_sun_ex);
 	animation_ex.set_inter_time(50);
 	
@@ -42,24 +44,14 @@ SunflowerBulletEx::SunflowerBulletEx()
 	animation_ex_explode.set_inter_time(50);
 	animation_ex_explode.set_loop(false);
 	animation_ex_explode.set_callback([&]() {can_remove = true; });
-	
-	animation_text.set_atlas(&atlas_sun_text);
-	animation_text.set_inter_time(75);
-	animation_text.set_loop(false);
-
-
-	explode_render_ex.x = 288;
-	explode_render_ex.y = 288;
 
 	damage = 20;
-
 
 	IMAGE* frame_idle = animation_ex.get_current_frame();
 	IMAGE* frame_explode = animation_ex_explode.get_current_frame();
 	explode_render_ex.x = (frame_idle->getwidth() - frame_explode->getwidth()) / 2.0f;
 	explode_render_ex.y = (frame_explode->getheight() - frame_explode->getheight()) / 2.0f;
 
-	
 }
 
 SunflowerBulletEx::~SunflowerBulletEx()
@@ -77,25 +69,27 @@ void SunflowerBulletEx::on_collide() {
 
 void SunflowerBulletEx::on_update(int delta) { 
 	
-	if (getCanCauseDamage()) {
+	if (can_cause_damage) {
 		position += velocity * (float)delta;
 	}
 
-	if (!getCanCauseDamage()) {
+	if (!can_cause_damage) {
 		animation_ex_explode.on_update(delta);
 	}
 	else
 	{
 		animation_ex.on_update(delta);
 	}
-	 
+	
+	// 这里有问题
 	if (checkIsExceedScreen()) {
 		can_remove = true;
 	}
 }
 
 void SunflowerBulletEx::on_draw(const Camera& camera) const {
-	if (getCanCauseDamage()) {
+
+	if (can_cause_damage) {
 		animation_ex.on_draw(camera, (int)position.x, (int)position.y);
 	}
 	else
@@ -104,6 +98,7 @@ void SunflowerBulletEx::on_draw(const Camera& camera) const {
 			(int)(position.x + explode_render_ex.x),
 			(int)(position.y + explode_render_ex.y));
 	}
+	Bullet::on_draw(camera);
 }
 
 bool SunflowerBulletEx::checkCollisionBox(const Vector2& position, const Vector2& collisionBox) {

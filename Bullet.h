@@ -7,6 +7,8 @@
 #include "Camera.h"
 #include "graphics.h"
 
+extern bool is_debug;
+
 class Bullet
 {
 public:
@@ -82,6 +84,13 @@ public:
 	}
 
 	virtual void on_draw(const Camera& camera) const {
+
+		if (is_debug) {
+			setfillcolor(RGB(255, 255, 255));
+			setlinecolor(RGB(255, 255, 255));
+			rectangle((int)position.x, (int)position.y, (int)(position.x + collisionBox.x), (int)(position.y + collisionBox.y));
+			solidcircle((int)(position.x + collisionBox.x / 2), (int)(position.y + collisionBox.y / 2), 5);
+		}
 
 	}
 

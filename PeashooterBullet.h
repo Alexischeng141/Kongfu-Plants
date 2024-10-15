@@ -46,7 +46,7 @@ public:
 		}
 	}
 
-
+	// 更新子弹的坐标信息
 	void on_update(int delta) {
 		position += velocity * (float)delta;
 
@@ -67,6 +67,7 @@ public:
 		{	
 			animation_pea_break.on_draw(camera, (int)position.x, (int)position.y);
 		}
+		Bullet::on_draw(camera);
 	}
 
 

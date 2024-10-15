@@ -119,9 +119,9 @@ public:
 			return deletable;
 			}), Bullet_list.end());
 
-		for (Bullet* bullet : Bullet_list) {
+		for (Bullet* bullet : Bullet_list) 
 			bullet->on_update(interval_time);
-		}
+		
 	}
 
 	void OnDraw(const Camera& camera) {
@@ -129,12 +129,12 @@ public:
 		putimage_alpha(camera, pos_img_sky.x, pos_img_sky.y, &img_sky);
 		putimage_alpha(camera, pos_img_hills.x, pos_img_hills.y, &img_hills);
 
-		// 互动平台加载
+		// 平台加载
 		for (const Platform& platform : Platform_list) {
 			platform.on_draw(camera);
 		}
 
-		// debug 提示字样
+		// debug提示字样加载
 		if (is_debug) {
 			settextcolor(RGB(255, 0, 0));
 			outtextxy(15, 15, _T("Press 'Q' again to stop debuging"));
