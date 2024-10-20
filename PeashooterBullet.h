@@ -26,7 +26,7 @@ public:
 	}
 	~PeashooterBullet() = default;
 
-	void on_collide() {
+	void on_collide() override {
 
 		Bullet::on_collide();
 		
@@ -59,7 +59,7 @@ public:
 		}
 	}
 
-	void on_draw(const Camera& camera) const {
+	void on_draw(const Camera& camera) const override {
 		if (can_cause_damage) {
 			putimage_alpha(camera, (int)position.x, (int)position.y, &img_pea);
 		}
@@ -74,10 +74,6 @@ public:
 private:
 
 	Animation animation_pea_break;
-
-	Animation* current_animation = nullptr;
-	
-
 
 };
 

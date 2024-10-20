@@ -6,7 +6,8 @@
 #include "Timer.h"
 #include "PeashooterBullet.h"
 
-extern Atlas atlas_peashooter_die;
+extern Atlas atlas_peashooter_die_right;
+extern Atlas atlas_peashooter_die_left;
 extern Atlas atlas_peashooter_idle_left;
 extern Atlas atlas_peashooter_idle_right;
 extern Atlas atlas_peashooter_run_left;
@@ -20,8 +21,10 @@ extern Atlas atlas_peashooter_attack_ex_left;
 class Peashooter : public Role 
 {
 public:
-	Peashooter() {
+	Peashooter(bool facing_right = true) : Role(facing_right){
 		// 设置动画图集
+		animation_die_left.set_atlas(&atlas_peashooter_die_left);
+		animation_die_right.set_atlas(&atlas_peashooter_die_right);
 		animation_idle_left.set_atlas(&atlas_peashooter_idle_left);
 		animation_idle_right.set_atlas(&atlas_peashooter_idle_right);
 		animation_run_left.set_atlas(&atlas_peashooter_run_left);
@@ -30,12 +33,18 @@ public:
 		animation_attack_ex_right.set_atlas(&atlas_peashooter_attack_ex_right);
 
 		// 设置动画帧间隔
+		animation_die_left.set_inter_time(75);
+		animation_die_right.set_inter_time(75);
 		animation_idle_left.set_inter_time(75);
 		animation_idle_right.set_inter_time(75);
 		animation_run_left.set_inter_time(75);
 		animation_run_right.set_inter_time(75);
 		animation_attack_ex_left.set_inter_time(75);
 		animation_attack_ex_right.set_inter_time(75);
+
+		animation_die_left.set_loop(false);
+		animation_die_right.set_loop(false);
+				
 
 		role_collision_box.x = 96;
 		role_collision_box.y = 96;
@@ -48,6 +57,7 @@ public:
 		timer_spwan_pea_ex.set_callback([&]() { spawn_pea_bullet(speed_pea_ex); });
 
 		attack_cd = 100;
+		Role::set_player_type(1);
 
 	}
 	~Peashooter() = default;
@@ -58,8 +68,8 @@ public:
 
 		if (is_attacking_ex) {			// 在on_attack_ex方法中is_attacking_ex被设为true
 			main_camera.shake(5, 100);
-			timer_attack_ex.on_updata(interval_time);
-			timer_spwan_pea_ex.on_updata(interval_time);
+			timer_attack_ex.on_update(interval_time);
+			timer_spwan_pea_ex.on_update(interval_time);
 		}
 	}
 

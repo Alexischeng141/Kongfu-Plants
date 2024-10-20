@@ -1,6 +1,7 @@
 #pragma once
 #ifndef _SCENEMANAGER_H_
 #define _SCENEMANAGER_H_
+
 //≥°æ∞π‹¿Ì∆˜
 #include "scene.h"
 

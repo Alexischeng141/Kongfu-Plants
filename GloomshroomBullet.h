@@ -1,10 +1,8 @@
 #ifndef _GLOOMSHROOMBULLET_H_
 #define _GLOOMSHROOMBULLET_H_
 
-#include "Animation.h"
-#include "role.h"
 #include "Bullet.h"
-#include "Vector2.h"
+#include "Role.h"
 
 extern Atlas atlas_bubbles;
 
@@ -21,9 +19,7 @@ public:
 	
 	void on_update(int delta);
 	
-	void on_input(const ExMessage& msg);
-	
-	void on_collide();
+	void on_collide() override;
 	
 	void getCollisionBox();
 
@@ -39,13 +35,15 @@ private:
 
 
 GloomshroomBullet::GloomshroomBullet()
-{
+{ 
 	damage = 10;
 	
 	animation_bubble.set_atlas(&atlas_bubbles);
-	animation_bubble.set_inter_time(75);
+	animation_bubble.set_inter_time(100);
 	animation_bubble.set_loop(false);
-	animation_bubble.set_callback([&]() { can_remove = true; });
+	animation_bubble.set_callback([&]() { can_remove = true; 
+		this->getCollideTargetId() == RoleId::P1 ? 
+			role_2->set_can_attack() : role_1->set_can_attack(); });
 	
 	size.x = (float)animation_bubble.get_current_frame()->getheight();
 	size.y = (float)animation_bubble.get_current_frame()->getwidth();
@@ -76,7 +74,6 @@ void GloomshroomBullet::on_update(int delta) {
 	// 根据当前的帧动画计算子弹的碰撞范围
 	// 由/*于子弹渲染位置是根据角色的位置改变而改变的
 	 
-	animation_bubble.on_update(delta);
 
 	if (targetId == RoleId::P1) {
 		position.x = role_2->get_position().x - (size.x / 2 - role_2->get_role_collision_box().x / 2);
@@ -88,6 +85,12 @@ void GloomshroomBullet::on_update(int delta) {
 		position.y = role_1->get_position().y - (size.y / 2 - role_1->get_role_collision_box().y / 2);
 	}
 
+	
+	animation_bubble.on_update(delta);
+
+	if (checkIsExceedScreen()) {
+		can_remove = true;
+	}
 }
 
 
@@ -96,12 +99,9 @@ void GloomshroomBullet::on_draw(const Camera& camera) const {
 	if (can_cause_damage) {
 		animation_bubble.on_draw(camera, (int)position.x, (int)position.y);
 	}
+
+	Bullet::on_draw(camera);
 }
-
-void GloomshroomBullet::on_input(const ExMessage& msg) {
-
-}
-
 
 void GloomshroomBullet::getCollisionBox() {
 	

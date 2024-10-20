@@ -43,7 +43,7 @@ SunflowerBulletEx::SunflowerBulletEx()
 	animation_ex_explode.set_atlas(&atlas_sun_ex_explode);
 	animation_ex_explode.set_inter_time(100);
 	animation_ex_explode.set_loop(false);
-	animation_ex_explode.set_callback([&]() {can_remove = true; });
+	animation_ex_explode.set_callback([&]() { can_remove = true; });
 
 	damage = 20;
 
@@ -81,7 +81,6 @@ void SunflowerBulletEx::on_update(int delta) {
 		animation_ex.on_update(delta);
 	}
 	
-	// 这里有问题
 	if (checkIsExceedScreen()) {
 		can_remove = true;
 	}

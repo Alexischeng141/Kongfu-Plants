@@ -118,6 +118,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -138,9 +139,11 @@
     <ClInclude Include="MenuScene.h" />
     <ClInclude Include="Nut.h" />
     <ClInclude Include="NutBullet.h" />
+    <ClInclude Include="Particle.h" />
     <ClInclude Include="PeashooterBullet.h" />
     <ClInclude Include="Peashooter.h" />
     <ClInclude Include="Platform.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="RoleId.h" />
     <ClInclude Include="Role.h" />
     <ClInclude Include="Scene.h" />
@@ -156,6 +159,7 @@
   <ItemGroup>
     <ClCompile Include="Atlas.h" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="StatusBar.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="resource\1P.png" />
@@ -339,7 +343,7 @@
     <Image Include="resource\sun_text_5.png" />
     <Image Include="resource\sun_text_6.png" />
     <Image Include="resource\VS.png" />
-    <Image Include="resource\winnner_bar.png" />
+    <Image Include="resource\winner_bar.png" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="resource\bgm_game.mp3" />
@@ -363,6 +367,9 @@
   </ItemGroup>
   <ItemGroup>
     <Font Include="resource\IPix.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Kongfu Plants.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

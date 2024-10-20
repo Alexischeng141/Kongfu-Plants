@@ -7,7 +7,7 @@
 #include "Atlas.h"
 
 // Í¼Æ¬·­×ª
-inline void filp_image(IMAGE* src, IMAGE* dst) {
+inline void flip_image(IMAGE* src, IMAGE* dst) {
 	int width = src->getwidth();
 	int height = src->getheight();
 	Resize(dst, width, height);
@@ -23,11 +23,11 @@ inline void filp_image(IMAGE* src, IMAGE* dst) {
 	}
 }
 
-inline void filp_atlas(Atlas& src_atlas, Atlas& dst_atlas) {
+inline void flip_atlas(Atlas& src_atlas, Atlas& dst_atlas) {
 	dst_atlas.clear();
 	for (int i = 0; i < src_atlas.get_frame_size(); i++) {
 		IMAGE dst_img;
-		filp_image(src_atlas.get_image(i), &dst_img);
+		flip_image(src_atlas.get_image(i), &dst_img);
 		dst_atlas.add_image(dst_img);
 	}
 }

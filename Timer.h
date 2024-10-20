@@ -9,7 +9,7 @@ public:
 	Timer() = default;
 	~Timer() = default;
 
-	// 重置定时器<is_shoted;passed_time>
+	// 重置定时器<is_shouted;passed_time>
 	void restart() {
 		passed_time = 0;
 		is_shotted = false;
@@ -30,7 +30,7 @@ public:
 		is_paused = true;
 	}
 
-	void on_updata(int val) {
+	void on_update(int val) {
 		if (is_paused)
 			return;
 		passed_time += val;

@@ -38,7 +38,7 @@ public:
 	}
 
 	void on_updata(int interval_time) {
-		timer_shake.on_updata(interval_time);
+		timer_shake.on_update(interval_time);
 
 		// 在以抖动强度为半径的圆内进行随机设置摄像机的世界坐标
 		if (is_shaking) {

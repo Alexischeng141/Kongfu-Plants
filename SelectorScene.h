@@ -50,9 +50,14 @@ extern Atlas atlas_nut_idle_right;
 
 extern IMAGE img_avatar_peashooter;
 extern IMAGE img_avatar_sunflower;
+extern IMAGE img_avatar_gloomshroom;
+extern IMAGE img_avatar_nut;
 
 extern Role* role_1;
 extern Role* role_2;
+
+extern IMAGE* img_1p_avatar;
+extern IMAGE* img_2p_avatar;
 
 extern SceneManager _SM;
 
@@ -104,6 +109,8 @@ public:
 		pos_2P_selector_btn_left.y = pos_1P_selector_btn_left.y;
 		pos_2P_selector_btn_right.x = pos_img_2P_gravestone.x + img_gravestone_left.getwidth();
 		pos_2P_selector_btn_right.y = pos_1P_selector_btn_left.y;
+
+		mciSendString(_T("play bgm_menu repeat from 0"), NULL, 0, NULL);
 	}
 
 	void OnInput(const ExMessage& msg) {
@@ -184,9 +191,9 @@ public:
 		animation_nut.on_update(interval_time);
 		
 
-		selector_background_scorll_locate_offset += 5;
-		if (selector_background_scorll_locate_offset >= img_peashooter_selector_background_right.getwidth()) {
-			selector_background_scorll_locate_offset = 0;
+		selector_background_scroll_locate_offset += 5;
+		if (selector_background_scroll_locate_offset >= img_peashooter_selector_background_right.getwidth()) {
+			selector_background_scroll_locate_offset = 0;
 		}
 	}
 
@@ -237,12 +244,12 @@ public:
 
 		putimage(0, 0, &img_selector_background);
 
-		putimage_alpha(selector_background_scorll_locate_offset - img_P1_selector_background->getwidth(), 0, img_P1_selector_background);
-		putimage_alpha(selector_background_scorll_locate_offset, 0,
-			img_P1_selector_background->getwidth() - selector_background_scorll_locate_offset, 0, img_P1_selector_background, 0, 0);
+		putimage_alpha(selector_background_scroll_locate_offset - img_P1_selector_background->getwidth(), 0, img_P1_selector_background);
+		putimage_alpha(selector_background_scroll_locate_offset, 0,
+			img_P1_selector_background->getwidth() - selector_background_scroll_locate_offset, 0, img_P1_selector_background, 0, 0);
 		putimage_alpha(getwidth() - img_P2_selector_background->getwidth(), 0, img_P2_selector_background->getwidth() -
-			selector_background_scorll_locate_offset, 0, img_P2_selector_background, selector_background_scorll_locate_offset, 0);
-		putimage_alpha(getwidth() - selector_background_scorll_locate_offset, 0, img_P2_selector_background);
+			selector_background_scroll_locate_offset, 0, img_P2_selector_background, selector_background_scroll_locate_offset, 0);
+		putimage_alpha(getwidth() - selector_background_scroll_locate_offset, 0, img_P2_selector_background);
 
 		putimage_alpha(camera, pos_img_vs.x, pos_img_vs.y, &img_vs);
 
@@ -327,16 +334,20 @@ public:
 		switch (player_type_1)
 		{
 		case SelectorScene::playerType::Peashooter:
-			role_1 = new Peashooter;
+			role_1 = new Peashooter();
+			img_1p_avatar = &img_avatar_peashooter;
 			break;
 		case SelectorScene::playerType::Sunflower:
-			role_1 = new Sunflower;
+			role_1 = new Sunflower();
+			img_1p_avatar = &img_avatar_sunflower;
 			break;
 		case SelectorScene::playerType::Gloomshroom:
-			role_1 = new Gloomshroom;
+			role_1 = new Gloomshroom();
+			img_1p_avatar = &img_avatar_gloomshroom;
 			break;
 		case SelectorScene::playerType::Nut:
-			role_1 = new Nut;
+			role_1 = new Nut();
+			img_1p_avatar = &img_avatar_nut;
 			break;
 		case SelectorScene::playerType::Invalid:
 			break;
@@ -348,16 +359,20 @@ public:
 		switch (player_type_2)
 		{
 		case SelectorScene::playerType::Peashooter:
-			role_2 = new Peashooter;
+			role_2 = new Peashooter(false);
+			img_2p_avatar = &img_avatar_peashooter;
 			break;
 		case SelectorScene::playerType::Sunflower:
-			role_2 = new Sunflower;
+			role_2 = new Sunflower(false);
+			img_2p_avatar = &img_avatar_sunflower;
 			break;
 		case SelectorScene::playerType::Gloomshroom:
-			role_2 = new Gloomshroom;
+			role_2 = new Gloomshroom();
+			img_2p_avatar = &img_avatar_gloomshroom;
 			break;
 		case SelectorScene::playerType::Nut:
-			role_2 = new Nut;
+			role_2 = new Nut();
+			img_2p_avatar = &img_avatar_nut;
 			break;
 		case SelectorScene::playerType::Invalid:
 			break;
@@ -365,6 +380,8 @@ public:
 			break;
 		}
 		role_2->set_id(RoleId::P2);
+
+		mciSendString(_T("stop bgm_menu"), NULL, 0, NULL);
 	}
 	
 
@@ -417,7 +434,7 @@ private:
 	LPCTSTR str_gloomshroom_name = _T("泡泡菇");
 	LPCTSTR str_nut_name = _T("坚果");
 
-	int selector_background_scorll_locate_offset = 0;	// 背景板滚动距离基准线
+	int selector_background_scroll_locate_offset = 0;	// 背景板滚动距离基准线
 
 	bool is_btn_1P_left_down = false;
 	bool is_btn_1P_right_down = false;

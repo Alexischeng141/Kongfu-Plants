@@ -22,6 +22,9 @@
     <Filter Include="头文件\bullet">
       <UniqueIdentifier>{8095c8ae-0439-4445-9403-17c8ad3630bb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="头文件\UI">
+      <UniqueIdentifier>{5771d20f-a7c1-4e02-9c01-4bd9b08923d4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h">
@@ -99,6 +102,12 @@
     <ClInclude Include="GloomshroomBulletEx.h">
       <Filter>头文件\bullet</Filter>
     </ClInclude>
+    <ClInclude Include="Particle.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Atlas.h">
@@ -106,6 +115,9 @@
     </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="StatusBar.h">
+      <Filter>头文件\UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -652,7 +664,7 @@
     <Image Include="resource\VS.png">
       <Filter>资源文件</Filter>
     </Image>
-    <Image Include="resource\winnner_bar.png">
+    <Image Include="resource\winner_bar.png">
       <Filter>资源文件</Filter>
     </Image>
   </ItemGroup>
@@ -716,5 +728,10 @@
     <Font Include="resource\IPix.ttf">
       <Filter>资源文件</Filter>
     </Font>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Kongfu Plants.rc">
+      <Filter>资源文件</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

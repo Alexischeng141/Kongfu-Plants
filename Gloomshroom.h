@@ -27,16 +27,29 @@ public:
 		animation_idle_right.set_atlas(&atlas_gloomshroom_idle_right);
 		animation_run_left.set_atlas(&atlas_gloomshroom_run_left);
 		animation_run_right.set_atlas(&atlas_gloomshroom_run_right);
+		animation_attack_ex_left.set_atlas(&atlas_gloomshroom_attack_ex_left);
+		animation_attack_ex_right.set_atlas(&atlas_gloomshroom_attack_ex_right);
 
 		// 设置帧间隔
 		animation_idle_left.set_inter_time(75);
 		animation_idle_right.set_inter_time(75);
 		animation_run_left.set_inter_time(75);
 		animation_run_right.set_inter_time(75);
+		animation_attack_ex_left.set_inter_time(100);
+		animation_attack_ex_right.set_inter_time(100);
+
 		
-		attack_ex_remain_timer.set_one_shot(true);
-		attack_ex_remain_timer.set_wait_time(5);
-		attack_ex_remain_timer.set_callback([&]() {mp = 0; });
+		timer_attack_ex_remain.set_wait_time(attack_ex_duration);
+		timer_attack_ex_remain.set_one_shot(true);
+		timer_attack_ex_remain.set_callback([&]() { is_attacking_ex = false; });
+
+		timer_generate_bubbles.set_wait_time(100);
+		timer_generate_bubbles.set_one_shot(false);
+		timer_generate_bubbles.set_callback([&]() { generate_gloomshroombullet_ex(); });
+		
+		Role::set_player_type(4);
+
+		// attack_cd = 100;
 
 	}
 
@@ -44,6 +57,11 @@ public:
 
 	void on_update(int interval_time) {
 		Role::on_update(interval_time);
+
+		if (is_attacking_ex) {
+			timer_attack_ex_remain.on_update(interval_time);
+		}
+
 	}
 
 	void on_input(const ExMessage& msg) {
@@ -54,20 +72,18 @@ public:
 		Role::on_draw(camera);
 	}
 
-	void on_attack() {
+	void on_attack() override {
 
 		generate_gloomshroombullet();
-		mciSendString(_T("play bubble_shot from 0"), NULL, 0, NULL);
+		mp += 100;
+		mciSendString(_T("play bubbles_shot from 0"), NULL, 0, NULL);
 
 	}
 
 	void on_attack_ex() {
-
-		if (mp >= 100) {
-			// 生成必杀技子弹类型
-			generate_gloomshroombullet_ex();
-			mciSendString(_T("play bubble_shot_ex from 0"), NULL, 0, NULL);
-		}
+		// 生成必杀技子弹类型
+		generate_gloomshroombullet_ex();
+		mciSendString(_T("play bubbles_shot_ex from 0"), NULL, 0, NULL);
 
 	}
 
@@ -100,6 +116,11 @@ private:
 	}
 
 	void generate_gloomshroombullet_ex() {
+		is_attacking_ex = true;
+		timer_attack_ex_remain.restart();
+		
+
+
 		Bullet* bullet_ex = new GloomshroomBulletEx();
 
 		Vector2 size;
@@ -126,8 +147,10 @@ private:
 
 private:
 	
-	Timer attack_ex_remain_timer;			// 必杀技持续时间
+	Timer timer_attack_ex_remain;			// 必杀技持续时间
+	Timer timer_generate_bubbles;			// 特殊攻击子弹生成间隔时间
 
+	int attack_ex_duration = 2500;			// 特殊攻击持续时间
 };
 
 #endif // !_GLOOMSHROOM_H_

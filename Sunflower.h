@@ -6,7 +6,8 @@
 #include "SunflowerBullet.h"
 #include "SunflowerBulletEx.h"
 
-extern Atlas atlas_sunflower_die;
+extern Atlas atlas_sunflower_die_right;
+extern Atlas atlas_sunflower_die_left;
 extern Atlas atlas_sunflower_idle_left;
 extern Atlas atlas_sunflower_idle_right;
 extern Atlas atlas_sunflower_run_left;
@@ -22,8 +23,12 @@ extern Role* role_2;
 class Sunflower : public Role
 {
 public:
-	Sunflower() {
+	Sunflower(bool facing_right = true) : Role(facing_right) {
+
+
 		// 设置动画图集
+		animation_die_left.set_atlas(&atlas_sunflower_die_left);
+		animation_die_right.set_atlas(&atlas_sunflower_die_right);
 		animation_idle_left.set_atlas(&atlas_sunflower_idle_left);
 		animation_idle_right.set_atlas(&atlas_sunflower_idle_right);
 		animation_run_left.set_atlas(&atlas_sunflower_run_left);
@@ -33,6 +38,8 @@ public:
 		animation_sun_text.set_atlas(&atlas_sun_text);
 
 		// 设置动画帧间隔
+		animation_die_left.set_inter_time(75);
+		animation_die_right.set_inter_time(75);
 		animation_idle_left.set_inter_time(75);
 		animation_idle_right.set_inter_time(75);
 		animation_run_left.set_inter_time(75);
@@ -41,6 +48,8 @@ public:
 		animation_attack_ex_right.set_inter_time(100);
 		animation_sun_text.set_inter_time(100);
 
+		animation_die_left.set_loop(false);
+		animation_die_right.set_loop(false);
 		animation_attack_ex_left.set_loop(false);
 		animation_attack_ex_right.set_loop(false);
 		animation_sun_text.set_loop(false);
@@ -59,6 +68,8 @@ public:
 			});
 
 		attack_cd = 250;
+
+		Role::set_player_type(2);
 		
 	}
 
@@ -72,9 +83,6 @@ public:
 			animation_sun_text.on_update(interval_time);
 		}
 
-		if (is_attacking_ex) {
-			
-		}
 	}
 
 	void on_input(const ExMessage& msg) {
@@ -109,7 +117,7 @@ public:
 		bullet->setCallback([&]() { mp += 35; });
 		Bullet_list.push_back(bullet);
 
-		mciSendString(_T("play sun_explod_ex from 0"), NULL, 0, NULL);
+		mciSendString(_T("play sun_explode_ex from 0"), NULL, 0, NULL);
 	}
 
 	void on_attack_ex() {
