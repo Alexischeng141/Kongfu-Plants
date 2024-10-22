@@ -26,7 +26,7 @@ public:
 		current_scene->OnEnter();
 	}
 
-	void swtich_scene_to(scenes type) {
+	void switch_scene_to(scenes type) {
 		current_scene->OnExit();
 		switch (type) {
 		case scenes::GAME_SCENE: {

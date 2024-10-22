@@ -667,6 +667,96 @@
     <Image Include="resource\winner_bar.png">
       <Filter>资源文件</Filter>
     </Image>
+    <Image Include="resource\020001.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="resource\020002.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="resource\020003.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="resource\020004.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="resource\020005.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="resource\020006.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="resource\020007.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="resource\020008.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="resource\020009.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="resource\020010.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="resource\020011.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="resource\020012.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="resource\020013.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="resource\020014.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="resource\020015.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="resource\020016.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="resource\020017.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="resource\020018.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="resource\020019.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="resource\020020.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="resource\020021.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="resource\020022.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="resource\020023.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="resource\020024.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="resource\020025.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="resource\020026.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="resource\020027.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="resource\020028.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="resource\020029.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="resource\020030.png">
+      <Filter>资源文件</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Media Include="resource\bgm_game.mp3">

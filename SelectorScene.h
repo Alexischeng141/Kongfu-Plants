@@ -110,7 +110,7 @@ public:
 		pos_2P_selector_btn_right.x = pos_img_2P_gravestone.x + img_gravestone_left.getwidth();
 		pos_2P_selector_btn_right.y = pos_1P_selector_btn_left.y;
 
-		mciSendString(_T("play bgm_menu repeat from 0"), NULL, 0, NULL);
+		
 	}
 
 	void OnInput(const ExMessage& msg) {
@@ -173,7 +173,7 @@ public:
 				break;
 			case VK_RETURN:
 				mciSendString(_T("play ui_switch from 0"), NULL, 0, NULL);
-				_SM.swtich_scene_to(SceneManager::scenes::GAME_SCENE);
+				_SM.switch_scene_to(SceneManager::scenes::GAME_SCENE);
 				break;
 			default:
 				break;

@@ -159,16 +159,19 @@ public:
 			particle.on_update(interval_time);
 		}
 
+		// 碰撞检测
+		move_and_collide(interval_time);
+
 		// 渲染无敌帧动画
 		if (is_showing_invulnerable_frame && hp > 0) {
 			sketch_image(current_animation->get_current_frame(), &img_sketch);
 		}
 
-		// 碰撞检测
-		move_and_collide(interval_time);
 	}
 
 	virtual void on_input(const ExMessage& msg) {
+		if (!is_alive)
+			return;
 		switch (msg.message) {
 			{
 		case WM_KEYDOWN:
@@ -381,6 +384,10 @@ public:
 		return this->role_id;
 	}
 
+	int get_player_type() {
+		return type;
+	}
+
 	void set_can_attack() {
 		this->can_attack = true;
 	}
@@ -395,6 +402,12 @@ public:
 
 	int get_mp() {
 		return this->mp; 
+	}
+
+	// 设置玩家为无敌状态
+	void make_invulnerable() {
+		is_invulnerable = true;
+		timer_invulnerable.restart();
 	}
 
 protected:
@@ -442,11 +455,14 @@ protected:
 				
 				// 判定子弹与自身是否发生碰撞
 				if (bullet->checkCollisionBox(position, role_collision_box)) {
-					make_invulnerable();						// 设置角色为无敌状态
-					bullet->on_collide();						// 调用子弹的碰撞方法
-					bullet->setCanCauseDamage(false);			// 设置可造成伤害状态为 false 
-					hp -= bullet->getDamage();					// 更新角色生命值
-					last_hurt_direction = bullet->getPosition() - position;	
+					
+					make_invulnerable();											// 更新角色为无敌状态
+					bullet->on_collide();											// 子弹的碰撞方法
+					bullet->setCanCauseDamage(false);								// 更新子弹可造成伤害状态为 false 
+					if ((hp -= bullet->getDamage()) == 0) {							// 更新玩家血量以及存活状态
+						is_alive = false;
+					}
+					last_hurt_direction = bullet->getPosition() - position;
 					if (hp <= 0) {
 						velocity.x = last_hurt_direction.x < 0 ? 0.35f : -0.35f;
 						velocity.y = -1.0f;
@@ -454,19 +470,9 @@ protected:
 				}
 			}
 		}
-
 	}
 
-	// 碰撞判定成功的条件：
-	// 上一帧平台的y坐标小于角色碰撞箱底部y坐标
-	// 下一帧平台的y坐标大于角色碰撞箱底部y坐标
-
-	// 设置玩家为无敌状态
-	void make_invulnerable() {
-		is_invulnerable = true;
-		timer_invulnerable.restart();
-	}
-
+	// 碰撞判定成功的条件：上一帧平台的y坐标小于角色碰撞箱底部y坐标，下一帧平台的y坐标大于角色碰撞箱底部y坐标
 protected:
 	enum playerType
 	{
@@ -478,65 +484,65 @@ protected:
 	};
 
 protected:
-	Vector2 position = { 0,0 };					// 角色位置
-	Vector2 velocity = { 0,0 };					// 记录角色速度
-	Vector2 role_collision_box = { 96, 96 };	// 角色碰撞箱
-	Vector2 position_jump_effect = { 0,0 };				// 跳跃特效渲染位置 
-	Vector2 position_land_effect = { 0,0 };				// 落地特效渲染位置
-	Vector2 last_hurt_direction = { 0,0 };				// 角色最后一次受击方向
+	Vector2 position = { 0,0 };						// 玩家角色位置
+	Vector2 velocity = { 0,0 };						// 玩家的速度
+	Vector2 role_collision_box = { 96, 96 };		// 玩家角色碰撞箱
+	Vector2 position_jump_effect = { 0,0 };			// 玩家跳跃特效渲染位置 
+	Vector2 position_land_effect = { 0,0 };			// 玩家落地特效渲染位置
+	Vector2 last_hurt_direction = { 0,0 };			// 玩家最后一次受击方向
 
+	Animation animation_die_left;					// 朝向左的死亡动画
+	Animation animation_die_right;					// 朝向右的死亡动画
+	Animation animation_idle_left;					// 朝向左的默认动画
+	Animation animation_idle_right;					// 朝向有的默认动画
+	Animation animation_run_left;					// 朝向左的奔跑动画
+	Animation animation_run_right;					// 朝向右的奔跑动画
+	Animation animation_attack_ex_left;				// 特殊攻击角色动画
+	Animation animation_attack_ex_right;			// 特殊攻击角色动画
+	Animation animation_jump_effect;				// 角色跳跃特效
+	Animation animation_land_effect;				// 角色落地特效
 
-	Animation animation_die_left;				// 朝向左的死亡动画
-	Animation animation_die_right;				// 朝向右的死亡动画
-	Animation animation_idle_left;				// 朝向左的默认动画
-	Animation animation_idle_right;
-	Animation animation_run_left;				// 朝向左的奔跑动画
-	Animation animation_run_right;
-	Animation animation_attack_ex_left;			// 特殊攻击角色动画
-	Animation animation_attack_ex_right;
-	Animation animation_jump_effect;			// 角色跳跃特效
-	Animation animation_land_effect;			// 角色落地特效
+	RoleId role_id = RoleId::P1;					// 玩家id
 
-	RoleId role_id = RoleId::P1;
+	playerType type = defaulttype;					// 玩家角色类型
 
-	playerType type = defaulttype;				// 角色类型
-
-	bool is_jump_effect_visible = false;				// 跳跃特效是否可见
-	bool is_land_effect_visible = false;				// 落地特效是否可见
-	bool is_left_key_down = false;				
-	bool is_right_key_down = false;
-	bool is_facing_right = true;
-	bool is_attacking_ex = false;				// 是否正在释放特殊攻击
-
-protected:
-	const float	gravity = 1.6e-3f;				// 重力加速度
-	const float role_run_velocity = 0.55f;		// 玩家奔跑速度
-	const float role_jump_velocity = -0.85f;	// 跳跃速度
+	bool is_jump_effect_visible = false;			// 跳跃特效是否可见
+	bool is_land_effect_visible = false;			// 落地特效是否可见
+	bool is_left_key_down = false;					// 左键是否按下
+	bool is_right_key_down = false;					// 右键是否按下
+	bool is_facing_right = true;					// 角色是否朝向右边
+	bool is_attacking_ex = false;					// 是否处于特殊攻击状态
 
 protected:
-	int mp = 0;									// 技能值
-	int hp = 100;								// 生命值
-	int attack_cd = 500;						// 普通攻击冷却时间
+	const float	gravity = 1.6e-3f;					// 玩家的重力加速度
+	const float role_run_velocity = 0.55f;			// 玩家的奔跑速度
+	const float role_jump_velocity = -0.85f;		// 玩家的跳跃速度
+
+protected:
+	int mp = 0;										// 玩家技能值
+	int hp = 100;									// 玩家生命值
+	int attack_cd = 500;							// 玩家普通攻击冷却时间
 
 private:
 
-	IMAGE img_sketch;
-	Animation* current_animation = nullptr;
+	IMAGE img_sketch;								// 角色当前需要进行翻转的动画帧
+	Animation* current_animation = nullptr;			// 玩家当前正在进行播放的动画
 	
-	bool can_attack = true;						// 是否可以释放普通攻击 
-	bool is_invulnerable = false;				// 角色是否处于无敌状态
-	bool is_showing_invulnerable_frame = false;	// 当前帧是否应该显示剪影，控制无敌帧剪影图片的播放
-	bool is_cursor_visible = true;				// 玩家光标是否可见
+	bool can_attack = true;							// 玩家是否可以释放普通攻击 
+	bool is_invulnerable = false;					// 玩家是否处于无敌状态
+	bool is_showing_invulnerable_frame = false;		// 玩家当前帧是否应该显示剪影，控制无敌帧剪影图片的播放
+	bool is_cursor_visible = true;					// 玩家光标是否可见
+	bool is_alive = true;							// 玩家是否存活
 
-	Timer timer_attack;							// 普通攻击冷却定时器
-	Timer timer_attack_ex;						// 必杀技持续时间定时器
-	Timer timer_invulnerable;					// 无敌状态定时器，设置
-	Timer timer_invulnerable_blink;				// 无敌状态闪烁定时器
-	Timer timer_run_effect_generator;			// 玩家奔跑时的粒子发射器,控制粒子生成
-	Timer timer_die_effect_generator;			// 玩家死亡时的粒子发射器,控制粒子生成
-	Timer timer_cursor_visibility;				// 玩家光标指示器可见定时器
+	Timer timer_attack;								// 玩家普通攻击冷却定时器
+	Timer timer_attack_ex;							// 玩家必杀技持续时间定时器
+	Timer timer_invulnerable;						// 玩家无敌状态定时器
+	Timer timer_invulnerable_blink;					// 玩家无敌帧闪烁定时器
+	Timer timer_run_effect_generator;				// 玩家奔跑时的粒子发射器,控制粒子生成
+	Timer timer_die_effect_generator;				// 玩家死亡时的粒子发射器,控制粒子生成
+	Timer timer_cursor_visibility;					// 玩家光标指示器可见定时器
 	
-	std::vector<Particle> Particle_list;
+	std::vector<Particle> Particle_list;			// 玩家粒子管理器
 
 };
 #endif // !_ROLE_H_

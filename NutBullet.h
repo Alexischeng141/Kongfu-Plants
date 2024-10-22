@@ -7,7 +7,13 @@
 #include "Vector2.h"
 
 extern Atlas atlas_nut_explode;
-extern Atlas atlas_nut_attack_ex;
+extern Atlas atlas_nut_explode_effect;
+
+
+extern Role* role_1;
+extern Role* role_2;
+
+extern Camera main_camera;
 
 class NutBullet : public Bullet {
 public:
@@ -15,61 +21,87 @@ public:
 	NutBullet();
 	~NutBullet();
 
-	void on_update(int delta);
-	void on_draw(const Camera& camera);
-	void on_input(const ExMessage& msg);
-	void on_collide();
-
+	void on_update(int delta) override;
+	void on_draw(const Camera& camera) const override;
+	void on_collide() override;
+	bool checkCollisionBox(const Vector2& position, const Vector2& collisionBox) override;
+	const Animation* get_animation() const override;
 
 private:
-	Animation animation_explode;
-	Animation animation_attack_ex;
-
-	Vector2 collisionBox = { 0,0 };			// 子弹的碰撞箱
+	Animation animation_explode;			// 子弹的爆炸特效
+	Animation animation_explode_effect;		// 子弹的爆炸特效
 
 };
 
 NutBullet::NutBullet() {
 
-	damage = 200;
+	damage = 50;
+
+	animation_explode_effect.set_atlas(&atlas_nut_explode_effect);
+	animation_explode_effect.set_inter_time(75);
+	animation_explode_effect.set_loop(false);
+	animation_explode_effect.set_callback([&]()
+		{
+			can_remove = true;
+			
+		});
 
 	animation_explode.set_atlas(&atlas_nut_explode);
-	animation_attack_ex.set_atlas(&atlas_nut_attack_ex);
-
 	animation_explode.set_inter_time(75);
-	animation_attack_ex.set_inter_time(75);
-	
 	animation_explode.set_loop(false);
-	animation_attack_ex.set_loop(false);
+	animation_explode.set_callback([&]()
+		{
+			can_remove = true;
+		});
 
-	animation_explode.set_callback([&]() { can_remove = true; });
-	animation_attack_ex.set_callback([&]() { can_remove = true; });
+	// 设置子弹的碰撞箱
+	collisionBox.x = (float)animation_explode.get_current_frame()->getwidth();
+	collisionBox.y = (float)animation_explode.get_current_frame()->getwidth();
+	
+	// 设置子弹的单帧宽高
+	bulletSize.x = (float)(animation_explode.get_current_frame()->getwidth());
+	bulletSize.y = (float)(animation_explode.get_current_frame()->getheight());
 
-	/*
 	
-	碰撞箱初始化代码块
-	
-	*/
 
 }
 NutBullet::~NutBullet() {}
 
 void NutBullet::on_update(int delta) {
-
-
-}
-
-void NutBullet::on_draw(const Camera& camera) {
+	this->Bullet::on_update(delta);
+	animation_explode.on_update(delta);
+	//animation_explode_effect.on_update(delta);
 
 }
 
-void NutBullet::on_input(const ExMessage& msg) {
-
+inline void NutBullet::on_draw(const Camera& camera) const {
+	this->Bullet::on_draw(camera);
+	animation_explode.on_draw(camera, (int)position.x, (int)position.y);
+	//animation_explode_effect.on_draw(camera, (int)position.x, (int)position.y);
+	
 }
+
 
 void NutBullet::on_collide() {
+	// 子弹的碰撞判定方式与其他子弹类不一样
+	
+	Bullet::on_collide();
 
+	can_cause_damage = false;
+
+	
 }
 
+inline bool NutBullet::checkCollisionBox(const Vector2& position, const Vector2& collisionBox) {
+	bool is_collide_x = (max(this->position.x + this->collisionBox.x, position.x + collisionBox.x)
+		- min(this->position.x, position.x) <= this->collisionBox.x + collisionBox.x);
+	bool is_collide_y = (max(this->position.y + this->collisionBox.y, position.y + collisionBox.y)
+		- min(this->position.y, position.y) <= this->collisionBox.y + collisionBox.y);
+	return is_collide_x && is_collide_y;
+}
+
+inline const Animation* NutBullet::get_animation() const {
+	return &animation_explode;
+}
 
 #endif // !_NUTBULLET_H_

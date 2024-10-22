@@ -25,7 +25,6 @@ class Sunflower : public Role
 public:
 	Sunflower(bool facing_right = true) : Role(facing_right) {
 
-
 		// ÉèÖÃ¶¯»­Í¼¼¯
 		animation_die_left.set_atlas(&atlas_sunflower_die_left);
 		animation_die_right.set_atlas(&atlas_sunflower_die_right);
@@ -114,7 +113,7 @@ public:
 
 		bullet->setCollideTarget(role_id == RoleId::P1 ? RoleId::P2 : RoleId::P1);
 
-		bullet->setCallback([&]() { mp += 35; });
+		bullet->setCallback([&]() { mp += 100; });
 		Bullet_list.push_back(bullet);
 
 		mciSendString(_T("play sun_explode_ex from 0"), NULL, 0, NULL);

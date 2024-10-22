@@ -14,13 +14,13 @@ public:
 	GloomshroomBulletEx();
 	~GloomshroomBulletEx();
 	void on_update(int delta) override;
-	void on_draw(const Camera& camera);
+	void on_draw(const Camera& camera) const override;
 	void on_collide() override;
-
+	const Animation* get_animation() const override;
 
 private:
 	Animation animation_bubble_ex;
-	Vector2 size = { 0,0 };
+	//Vector2 bulletSize = { 0,0 };				// Ö¡µÄ¿í¸ß
 
 };
 
@@ -32,8 +32,8 @@ GloomshroomBulletEx::GloomshroomBulletEx() {
 	animation_bubble_ex.set_inter_time(50);
 	animation_bubble_ex.set_callback([&]() {  can_remove = true; });
 	
-	size.x = (float)animation_bubble_ex.get_current_frame()->getwidth();
-	size.y = (float)animation_bubble_ex.get_current_frame()->getheight();
+	bulletSize.x = (float)animation_bubble_ex.get_current_frame()->getwidth();
+	bulletSize.y = (float)animation_bubble_ex.get_current_frame()->getheight();
 	
 }
 
@@ -45,7 +45,7 @@ void GloomshroomBulletEx::on_update(int delta) {
 	GloomshroomBullet::on_update(delta);
 }
 
-void GloomshroomBulletEx::on_draw(const Camera& camera) {
+void GloomshroomBulletEx::on_draw(const Camera& camera) const {
 	Bullet::on_draw(camera);
 	
 
@@ -56,5 +56,8 @@ void GloomshroomBulletEx::on_collide() {
 	
 }
 
+const Animation* GloomshroomBulletEx::get_animation() const {
+	return &animation_bubble_ex;
+}
 
 #endif // !_GLOOMSHROOMBULLETEX_H_

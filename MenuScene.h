@@ -24,14 +24,13 @@ public:
 
 
 	void OnEnter() {
-		// 初始化动画资源
 		mciSendString(_T("play bgm_menu repeat from 0"), NULL, 0, NULL);
 	}
 
 	void OnInput(const ExMessage& msg) {
 		if (msg.message == WM_KEYDOWN) {
 			mciSendString(_T("play ui_confirm from 0"), NULL, 0, NULL);
-			_SM.swtich_scene_to(SceneManager::scenes::SELECTOR_SCENE);
+			_SM.switch_scene_to(SceneManager::scenes::SELECTOR_SCENE);
 		}
 	}
 

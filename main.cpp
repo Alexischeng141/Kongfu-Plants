@@ -78,7 +78,8 @@ Atlas atlas_buff_box_blue;
 Atlas atlas_buff_box_pink;
 Atlas atlas_buff_box_yellow;
 
-Atlas atlas_gloomshroom_die;
+Atlas atlas_gloomshroom_die_right;
+Atlas atlas_gloomshroom_die_left;
 Atlas atlas_gloomshroom_attack_ex_right;
 Atlas atlas_gloomshroom_attack_ex_left;
 Atlas atlas_gloomshroom_idle_right;
@@ -92,13 +93,17 @@ Atlas atlas_jump_effect_right;
 Atlas atlas_jump_effect_left;
 Atlas atlas_land_effect;
 
-Atlas atlas_nut_die;
+Atlas atlas_nut_explode_effect;
+
+Atlas atlas_nut_die_right;
+Atlas atlas_nut_die_left;
 Atlas atlas_nut_idle_left;
 Atlas atlas_nut_idle_right;
 Atlas atlas_nut_run_left;
 Atlas atlas_nut_run_right;
 Atlas atlas_nut_explode;
-Atlas atlas_nut_attack_ex;
+Atlas atlas_nut_attack_ex_right;
+Atlas atlas_nut_attack_ex_left;
 
 Atlas atlas_peashooter_die_right;
 Atlas atlas_peashooter_die_left;						
@@ -212,7 +217,8 @@ void load_game_resource() {
 	atlas_land_effect.load_atlas_resource(_T("resource/land_effect_%d.png"), 2);
 
 	// ещещ╧╫
-	atlas_gloomshroom_die.load_atlas_resource(_T("resource/gloomshroom_die_%d.png"), 3);
+	atlas_gloomshroom_die_right.load_atlas_resource(_T("resource/gloomshroom_die_%d.png"), 3);
+	flip_atlas(atlas_gloomshroom_die_right, atlas_gloomshroom_die_left);
 	atlas_gloomshroom_idle_right.load_atlas_resource(_T("resource/gloomshroom_idle_%d.png"), 4);
 	flip_atlas(atlas_gloomshroom_idle_right, atlas_gloomshroom_idle_left);
 	atlas_gloomshroom_attack_ex_right.load_atlas_resource(_T("resource/gloomshroom_attack_ex_%d.png"), 7);
@@ -222,11 +228,14 @@ void load_game_resource() {
 
 	atlas_nut_run_right.load_atlas_resource(_T("resource/nut_run_%d.png"), 3);
 	flip_atlas(atlas_nut_run_right, atlas_nut_run_left);
-	atlas_nut_die.load_atlas_resource(_T("resource/nut_die_%d.png"), 3);
+	atlas_nut_die_right.load_atlas_resource(_T("resource/nut_die_%d.png"), 3);
+	flip_atlas(atlas_nut_die_right, atlas_nut_die_left);
 	atlas_nut_idle_right.load_atlas_resource(_T("resource/nut_idle_%d.png"), 3);
 	flip_atlas(atlas_nut_idle_right, atlas_nut_idle_left);
 	atlas_nut_explode.load_atlas_resource(_T("resource/nut_explode_%d.png"), 5);
-	atlas_nut_attack_ex.load_atlas_resource(_T("resource/nut_attack_ex_%d.png"), 5);
+	atlas_nut_attack_ex_right.load_atlas_resource(_T("resource/nut_attack_ex_%d.png"), 5);
+	flip_atlas(atlas_nut_attack_ex_right, atlas_nut_attack_ex_left);
+	atlas_nut_explode_effect.load_atlas_resource(_T("resource/02%04d.png"), 30);
 
 	atlas_peashooter_run_right.load_atlas_resource(_T("resource/peashooter_run_%d.png"), 5);
 	flip_atlas(atlas_peashooter_run_right, atlas_peashooter_run_left);
@@ -281,10 +290,10 @@ int main(void) {
 	menu_scene = new MenuScene;
 	game_scene = new GameScene;
 	selector_scene = new SelectorScene;
-	_SM.set_current_scene(menu_scene);
 
 	load_game_resource();
 	initgraph(WIN_WIDHT, WIN_HEIGHT);
+	_SM.set_current_scene(menu_scene);
 
 	settextstyle(28, 0, _T("IPix"));
 	setbkmode(TRANSPARENT);

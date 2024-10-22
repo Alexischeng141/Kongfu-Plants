@@ -64,7 +64,7 @@ public:
 		timer_winner_slide_out.set_one_shot(true);
 		timer_winner_slide_out.set_callback([&]()
 			{
-				_SM.swtich_scene_to(SceneManager::scenes::MENU_SCENE);
+				_SM.switch_scene_to(SceneManager::scenes::MENU_SCENE);
 			});
 
 		role_1->set_position(200, 50);

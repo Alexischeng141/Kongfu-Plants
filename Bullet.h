@@ -2,6 +2,7 @@
 #define _BULLET_H_
 
 #include "Vector2.h"
+#include "Animation.h"
 #include "functional"
 #include "RoleId.h"
 #include "Camera.h"
@@ -14,6 +15,8 @@ class Bullet
 public:
 	Bullet() = default;
 	~Bullet() = default;
+
+	
 
 	void setDamage(int damage) {
 		this->damage = damage;
@@ -32,8 +35,12 @@ public:
 		return position;
 	}
 
-	const Vector2& getCollisionBox() {
+	const Vector2& getCollisionBox() const {
 		return collisionBox;
+	}
+
+	const Vector2& getBulletSize() const {
+		return bulletSize;
 	}
 
 	void setVelocity(float x, float y) {
@@ -83,6 +90,10 @@ public:
 
 	}
 
+	virtual const Animation* get_animation() const {
+		return nullptr;
+	};
+
 	virtual void on_draw(const Camera& camera) const {
 
 		if (is_debug) {
@@ -96,17 +107,18 @@ public:
 
 protected:
 	
-	Vector2 collisionBox = { 0,0 };			// 子弹的碰撞箱
+	Vector2 collisionBox = { 0,0 };			// 子弹的碰撞箱即碰撞范围
+	Vector2 bulletSize = { 0,0 };			// 子弹的单帧宽高
 	Vector2 position = { 0,0 };				// 子弹的位置
 	Vector2 velocity = { 0,0 };				// 子弹的速度
 
-	int damage = 10;						// 伤害
-	bool can_cause_damage = true;			// 是否能造成伤害
-	bool can_remove = false;				// 是否能被移除
+	int damage = 10;						// 子弹的伤害
+	bool can_cause_damage = true;			// 子弹是否能造成伤害
+	bool can_remove = false;				// 子弹是否能被移除
 	
-	std::function<void()> callback;			// 子弹碰撞时回调函数
+	std::function<void()> callback;			// 子弹发生碰撞时的回调函数
 	
-	RoleId targetId = RoleId::P1;			// 攻击目标
+	RoleId targetId = RoleId::P1;			// 子弹的攻击目标
 
 protected:
 	

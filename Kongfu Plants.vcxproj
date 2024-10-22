@@ -162,6 +162,36 @@
     <ClCompile Include="StatusBar.h" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="resource\020001.png" />
+    <Image Include="resource\020002.png" />
+    <Image Include="resource\020003.png" />
+    <Image Include="resource\020004.png" />
+    <Image Include="resource\020005.png" />
+    <Image Include="resource\020006.png" />
+    <Image Include="resource\020007.png" />
+    <Image Include="resource\020008.png" />
+    <Image Include="resource\020009.png" />
+    <Image Include="resource\020010.png" />
+    <Image Include="resource\020011.png" />
+    <Image Include="resource\020012.png" />
+    <Image Include="resource\020013.png" />
+    <Image Include="resource\020014.png" />
+    <Image Include="resource\020015.png" />
+    <Image Include="resource\020016.png" />
+    <Image Include="resource\020017.png" />
+    <Image Include="resource\020018.png" />
+    <Image Include="resource\020019.png" />
+    <Image Include="resource\020020.png" />
+    <Image Include="resource\020021.png" />
+    <Image Include="resource\020022.png" />
+    <Image Include="resource\020023.png" />
+    <Image Include="resource\020024.png" />
+    <Image Include="resource\020025.png" />
+    <Image Include="resource\020026.png" />
+    <Image Include="resource\020027.png" />
+    <Image Include="resource\020028.png" />
+    <Image Include="resource\020029.png" />
+    <Image Include="resource\020030.png" />
     <Image Include="resource\1P.png" />
     <Image Include="resource\1P_cursor.png" />
     <Image Include="resource\1P_desc.png" />
@@ -244,7 +274,10 @@
     <Image Include="resource\nut_die_1.png" />
     <Image Include="resource\nut_die_2.png" />
     <Image Include="resource\nut_die_3.png" />
-    <Image Include="resource\nut_explode_1.png" />
+    <Image Include="resource\nut_explode_1.png">
+      <DeploymentContent>true</DeploymentContent>
+      <FileType>Image</FileType>
+    </Image>
     <Image Include="resource\nut_explode_2.png" />
     <Image Include="resource\nut_explode_3.png" />
     <Image Include="resource\nut_explode_4.png" />

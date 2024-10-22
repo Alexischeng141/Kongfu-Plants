@@ -16,17 +16,16 @@ public:
 	~GloomshroomBullet();
 
 	void on_draw(const Camera& camera) const;
-	
-	void on_update(int delta);
-	
+	void on_update(int delta) override;
 	void on_collide() override;
-	
-	void getCollisionBox();
+	const Animation* get_animation() const override;
 
+
+protected:
+	Vector2 bulletSize = { 0,0 };
 
 private:
 	Animation animation_bubble;
-	Vector2 size = { 0,0 };
 
 	// 每一帧中跑跑子弹的位置
 	std::vector<Vector2> each_gloomshroombullet_within_frame_list;
@@ -41,12 +40,18 @@ GloomshroomBullet::GloomshroomBullet()
 	animation_bubble.set_atlas(&atlas_bubbles);
 	animation_bubble.set_inter_time(100);
 	animation_bubble.set_loop(false);
-	animation_bubble.set_callback([&]() { can_remove = true; 
-		this->getCollideTargetId() == RoleId::P1 ? 
-			role_2->set_can_attack() : role_1->set_can_attack(); });
+	animation_bubble.set_callback([&]() 
+		{ 
+			can_remove = true; 
+			this->getCollideTargetId() == RoleId::P1 ? 
+			role_2->set_can_attack() : role_1->set_can_attack(); 
+		});
+
+	collisionBox.x = (float)animation_bubble.get_current_frame()->getheight();
+	collisionBox.y = (float)animation_bubble.get_current_frame()->getwidth();
 	
-	size.x = (float)animation_bubble.get_current_frame()->getheight();
-	size.y = (float)animation_bubble.get_current_frame()->getwidth();
+	bulletSize.x = (float)animation_bubble.get_current_frame()->getheight();
+	bulletSize.y = (float)animation_bubble.get_current_frame()->getwidth();
 	
 }
 
@@ -54,38 +59,22 @@ GloomshroomBullet::~GloomshroomBullet() {}
 
 void GloomshroomBullet::on_collide() {
 	
-	switch (rand() % 2)
-	{
-	case 1:
-
-		break;
-	case 2:
-
-		break;
-	default:
-		break;
-	}
+	
 }
 
 
 void GloomshroomBullet::on_update(int delta) {
 
-
-	// 根据当前的帧动画计算子弹的碰撞范围
-	// 由/*于子弹渲染位置是根据角色的位置改变而改变的
-	 
-
 	if (targetId == RoleId::P1) {
-		position.x = role_2->get_position().x - (size.x / 2 - role_2->get_role_collision_box().x / 2);
-		position.y = role_2->get_position().y - (size.y / 2 - role_2->get_role_collision_box().y / 2);
+		position.x = role_2->get_position().x - (bulletSize.x / 2 - role_2->get_role_collision_box().x / 2);
+		position.y = role_2->get_position().y - (bulletSize.y / 2 - role_2->get_role_collision_box().y / 2);
 	}
 
 	if (targetId == RoleId::P2) {
-		position.x = role_1->get_position().x - (size.x / 2 - role_1->get_role_collision_box().x / 2);
-		position.y = role_1->get_position().y - (size.y / 2 - role_1->get_role_collision_box().y / 2);
+		position.x = role_1->get_position().x - (bulletSize.x / 2 - role_1->get_role_collision_box().x / 2);
+		position.y = role_1->get_position().y - (bulletSize.y / 2 - role_1->get_role_collision_box().y / 2);
 	}
 
-	
 	animation_bubble.on_update(delta);
 
 	if (checkIsExceedScreen()) {
@@ -95,17 +84,17 @@ void GloomshroomBullet::on_update(int delta) {
 
 
 void GloomshroomBullet::on_draw(const Camera& camera) const {
+
+	Bullet::on_draw(camera);
 	
 	if (can_cause_damage) {
 		animation_bubble.on_draw(camera, (int)position.x, (int)position.y);
 	}
 
-	Bullet::on_draw(camera);
 }
 
-void GloomshroomBullet::getCollisionBox() {
-	
+const Animation* GloomshroomBullet::get_animation() const {
+	return &animation_bubble;
 }
-
 
 #endif // !_GLOOMSHROOMBULLET_H_

@@ -48,7 +48,7 @@ public:
 		return current_index_of_frame;
 	}
 
-	IMAGE* get_current_frame() {
+	IMAGE* get_current_frame() const {
 		return atlas_for_animation->get_image(current_index_of_frame);
 	}
 
