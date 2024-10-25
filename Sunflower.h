@@ -115,7 +115,7 @@ public:
 
 		bullet->setCallback([&]() { mp += 100; });
 		Bullet_list.push_back(bullet);
-
+		
 		mciSendString(_T("play sun_explode_ex from 0"), NULL, 0, NULL);
 	}
 
@@ -153,8 +153,8 @@ public:
 	}
 
 private:
-	const float speed_sun_ex = 0.15f;
-	const Vector2 velocity_sun = { 0.25f, -0.5f };
+	const float speed_sun_ex = 0.15f;					// 特殊子弹的下落速度
+	const Vector2 velocity_sun = { 0.25f, -0.5f };		// 普通子弹的速度
 
 private:
 

@@ -7,6 +7,7 @@
 #include "RoleId.h"
 #include "Camera.h"
 #include "graphics.h"
+#include "Circle.h"
 
 extern bool is_debug;
 
@@ -24,6 +25,10 @@ public:
 
 	int getDamage() {
 		return damage;
+	}
+
+	int getBulletType() const {
+		return type;
 	}
 
 	void setPosition(float x, float y) {
@@ -64,6 +69,10 @@ public:
 		can_cause_damage = val;
 	}
 
+	void setBulletType(int type) {
+		this->type = (bulletType)type;
+	}
+
 	bool getCanCauseDamage() const {
 		return can_cause_damage;
 	}
@@ -79,6 +88,7 @@ public:
 	}
 
 	// 传入玩家的位置和碰撞箱
+	// 以子弹的圆心为判定条件
 	virtual bool checkCollisionBox(const Vector2& position, const Vector2& collisionBox) {
 		return this->position.x + this->collisionBox.x / 2 >= position.x
 			&& this->position.x + this->collisionBox.x / 2 <= position.x + collisionBox.x
@@ -105,6 +115,16 @@ public:
 
 	}
 
+
+	enum bulletType
+	{
+		none = 0,
+		peas,
+		sunflower,
+		gloomshroom,
+		nut
+	};
+
 protected:
 	
 	Vector2 collisionBox = { 0,0 };			// 子弹的碰撞箱即碰撞范围
@@ -119,6 +139,8 @@ protected:
 	std::function<void()> callback;			// 子弹发生碰撞时的回调函数
 	
 	RoleId targetId = RoleId::P1;			// 子弹的攻击目标
+
+	bulletType type = bulletType::none;		// 子弹的类型
 
 protected:
 	

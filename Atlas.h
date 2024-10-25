@@ -31,7 +31,8 @@ public:
 
 	void clear() {
 		image_list.clear();
-	}
+	}	                      
+
 
 	int get_frame_size() {
 		return (int)image_list.size();

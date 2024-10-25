@@ -110,8 +110,9 @@ public:
 
 		if (move_direction != 0) {
 			// 玩家移动时播放移动动画
-			if (!is_attacking_ex)
-				is_facing_right = move_direction > 0;
+			if (is_attacking_ex && !(type==playerType::gloomshroom))
+				return;
+			is_facing_right = move_direction > 0;
 			current_animation = is_facing_right ? &animation_run_right : &animation_run_left;
 			float distance = move_direction * role_run_velocity * interval_time;
 			on_run(distance);
@@ -142,8 +143,6 @@ public:
 		timer_invulnerable.on_update(interval_time);					// 更新无敌时间定时器
 		timer_invulnerable_blink.on_update(interval_time);				// 更新无敌帧闪烁定时器
 		timer_run_effect_generator.on_update(interval_time);			// 更新奔跑粒子发射器
-
-
 
 		// 删除粒子
 		Particle_list.erase(std::remove_if(
@@ -330,15 +329,19 @@ public:
 
 	}
 
+	// 控制玩家行走
 	virtual void on_run(float distance) {
 
-		if (is_attacking_ex)
-			return;
-
-		position.x += distance;
+		if(is_slow_down) {
+			position.x += distance * 0.5f;
+		}
+		else {
+			position.x += distance;
+		}
 		timer_run_effect_generator.resume();		// 恢复粒子发射器，生成粒子
 	}
 
+	// 控制玩家掉落
 	virtual void on_land() {
 		is_land_effect_visible = true;
 		animation_land_effect.reset();
@@ -347,6 +350,7 @@ public:
 		position_land_effect.y = position.y + role_collision_box.y - effect_frame->getheight();
 	}
 
+	// 控制玩家跳跃
 	virtual void on_jump() {
 
 		if (velocity.y != 0 || is_attacking_ex)
@@ -388,8 +392,8 @@ public:
 		return type;
 	}
 
-	void set_can_attack() {
-		this->can_attack = true;
+	void set_attack(bool val) {
+		this->can_attack = val;
 	}
 
 	void set_player_type(int type) {
@@ -410,13 +414,43 @@ public:
 		timer_invulnerable.restart();
 	}
 
+
+	// 使玩家处于减速状态
+	void make_slow_speed() {
+		is_normal_speed = false;
+		is_slow_down = true;
+	}
+
+	// 使玩家处于正常速度
+	void make_normal_speed() {
+		is_normal_speed = true;
+		is_slow_down = false;
+	}
+
+	// 使玩家处于减速移动
+	void move_slow_down(int strength, int delta) {
+		switch (strength)
+		{
+		case slowDownLevel::low:
+            position += velocity * (float)(delta / 0.8f);
+			break;
+		case slowDownLevel::medium:
+			position += velocity * (float)(delta / 0.6f);
+			break;
+		case slowDownLevel::high:
+			position += velocity * (float)(delta / 0.4f);
+			break;
+		default:
+			break;
+		}
+	}
+
 protected:
 	void move_and_collide(int delta) {
 
-		float last_velocity = velocity.y;
-
-		velocity.y += gravity * delta;			// 速度存储器记录了y方向上的速度分量
-		position += velocity * (float)delta;
+		float last_velocity = velocity.y;		// 速度存储器记录了y方向上的速度分量
+		velocity.y += gravity * delta;			// 更新y方向上的速度
+		position.y += velocity.y * (float)delta;
 
 		if (hp <= 0) {
 			return;
@@ -456,15 +490,16 @@ protected:
 				// 判定子弹与自身是否发生碰撞
 				if (bullet->checkCollisionBox(position, role_collision_box)) {
 					
-					make_invulnerable();											// 更新角色为无敌状态
-					bullet->on_collide();											// 子弹的碰撞方法
-					bullet->setCanCauseDamage(false);								// 更新子弹可造成伤害状态为 false 
-					if ((hp -= bullet->getDamage()) == 0) {							// 更新玩家血量以及存活状态
+					make_invulnerable();												// 更新角色为无敌状态
+					bullet->on_collide();												// 子弹的碰撞方法
+					if(!(bullet->getBulletType() == Bullet::bulletType::gloomshroom))
+						bullet->setCanCauseDamage(false);									// 更新子弹可造成伤害状态为 false 
+					if ((hp -= bullet->getDamage()) == 0) {								// 更新玩家血量以及存活状态
 						is_alive = false;
 					}
-					last_hurt_direction = bullet->getPosition() - position;
+					last_hurt_direction.x = bullet->getPosition().x - position.x;
 					if (hp <= 0) {
-						velocity.x = last_hurt_direction.x < 0 ? 0.35f : -0.35f;
+							velocity.x = last_hurt_direction.x < 0 ? 0.35f : -0.35f;
 						velocity.y = -1.0f;
 					}
 				}
@@ -481,6 +516,13 @@ protected:
 		sunFlower,
 		nut,
 		gloomshroom
+	};
+
+	enum slowDownLevel
+	{
+		low = 0,
+		medium,
+		high
 	};
 
 protected:
@@ -506,6 +548,8 @@ protected:
 
 	playerType type = defaulttype;					// 玩家角色类型
 
+	bool is_normal_speed = true;					// 是否处于正常速度
+	bool is_slow_down = false;						// 是否处于减速状态
 	bool is_jump_effect_visible = false;			// 跳跃特效是否可见
 	bool is_land_effect_visible = false;			// 落地特效是否可见
 	bool is_left_key_down = false;					// 左键是否按下

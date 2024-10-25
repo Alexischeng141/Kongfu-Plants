@@ -15,12 +15,13 @@ public:
 	~GloomshroomBulletEx();
 	void on_update(int delta) override;
 	void on_draw(const Camera& camera) const override;
+	bool checkCollisionBox(const Vector2& position, const Vector2& collisionBox) override;
 	void on_collide() override;
 	const Animation* get_animation() const override;
 
 private:
 	Animation animation_bubble_ex;
-	//Vector2 bulletSize = { 0,0 };				// Ö¡µÄ¿í¸ß
+	
 
 };
 
@@ -49,6 +50,11 @@ void GloomshroomBulletEx::on_draw(const Camera& camera) const {
 	Bullet::on_draw(camera);
 	
 
+}
+
+inline bool GloomshroomBulletEx::checkCollisionBox(const Vector2& position, const Vector2& collisionBox)
+{
+	return GloomshroomBullet::checkCollisionBox(position, collisionBox);
 }
 
 void GloomshroomBulletEx::on_collide() {

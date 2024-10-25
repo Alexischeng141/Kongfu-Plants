@@ -159,6 +159,7 @@
   <ItemGroup>
     <ClCompile Include="Atlas.h" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="role.cpp" />
     <ClCompile Include="StatusBar.h" />
   </ItemGroup>
   <ItemGroup>

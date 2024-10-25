@@ -134,7 +134,7 @@ private:
 		bullet->setCollideTarget(role_id == RoleId::P1 ? RoleId::P2 : RoleId::P1);		// 设置子弹碰撞判定条件
 		bullet->setCallback([&]() { mp += 25; });
 
-		Bullet_list.push_back(bullet);		// 所有生成的子弹储存在vector容器中便于管理
+		Bullet_list.push_back(bullet);		// 所有生成的子弹储存在 vector 容器中便于管理
 	}
 
 private:

@@ -173,7 +173,7 @@ void load_game_resource() {
 	loadimage(&img_2P_winner, _T("resource/2P_winner.png"));
 
 	loadimage(&img_avatar_gloomshroom, _T("resource/avatar_gloomshroom.png"));
-	loadimage(&img_avatar_nut, _T("resource/avatar_gloomshroom.png"));
+	loadimage(&img_avatar_nut, _T("resource/avatar_nut.png"));
 	loadimage(&img_avatar_peashooter, _T("resource/avatar_peashooter.png"));
 	loadimage(&img_avatar_sunflower, _T("resource/avatar_sunflower.png"));
 	loadimage(&img_sky, _T("resource/sky.png"));

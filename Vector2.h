@@ -1,6 +1,7 @@
 #pragma once
 #ifndef _VECTOR2_H_
 #define _VECTOR2_H_
+
 #include <cmath>
 
 // 二维平面向量类

@@ -96,9 +96,6 @@
     <ClInclude Include="SunflowerBulletEx.h">
       <Filter>头文件\bullet</Filter>
     </ClInclude>
-    <ClInclude Include="Circle.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="GloomshroomBulletEx.h">
       <Filter>头文件\bullet</Filter>
     </ClInclude>
@@ -106,6 +103,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="resource.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Circle.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -118,6 +118,9 @@
     </ClCompile>
     <ClCompile Include="StatusBar.h">
       <Filter>头文件\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="role.cpp">
+      <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

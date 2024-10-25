@@ -85,7 +85,7 @@ inline void NutBullet::on_draw(const Camera& camera) const {
 void NutBullet::on_collide() {
 	// 子弹的碰撞判定方式与其他子弹类不一样
 	
-	Bullet::on_collide();
+	Bullet::on_collide();						//基类中的on_collide方法调用了回调函数
 
 	can_cause_damage = false;
 
