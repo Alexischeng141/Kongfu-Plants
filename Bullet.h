@@ -132,7 +132,7 @@ protected:
 	Vector2 position = { 0,0 };				// 子弹的位置
 	Vector2 velocity = { 0,0 };				// 子弹的速度
 
-	int damage = 10;						// 子弹的伤害
+	int damage = 0;							// 子弹的伤害
 	bool can_cause_damage = true;			// 子弹是否能造成伤害
 	bool can_remove = false;				// 子弹是否能被移除
 	

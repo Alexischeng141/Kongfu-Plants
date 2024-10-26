@@ -26,6 +26,7 @@ protected:
 private:
 	
 	Animation animation_bubble;
+	Circle gloomshroomCollisionBox = { 0,0,0 };
 
 	// 每一帧中跑跑子弹的位置
 	std::vector<Vector2> each_gloomshroombullet_within_frame_list;
@@ -53,6 +54,7 @@ GloomshroomBullet::GloomshroomBullet()
 	bulletSize.x = (float)animation_bubble.get_current_frame()->getwidth();
 	bulletSize.y = (float)animation_bubble.get_current_frame()->getheight();
 
+	gloomshroomCollisionBox.setRadius(bulletSize.x / 2.5f);
 	
 	
 }
@@ -60,7 +62,7 @@ GloomshroomBullet::GloomshroomBullet()
 GloomshroomBullet::~GloomshroomBullet() {}
 
 void GloomshroomBullet::on_collide() {
-	Bullet::on_collide();
+	Bullet::on_collide(); 
 	
 }
 
@@ -70,13 +72,18 @@ void GloomshroomBullet::on_update(int delta) {
 	if (targetId == RoleId::P1) {
 		position.x = role_2->get_position().x - (bulletSize.x / 2 - role_2->get_role_collision_box().x / 2);
 		position.y = role_2->get_position().y - (bulletSize.y / 2 - role_2->get_role_collision_box().y / 2);
+		// gloomshroomCollisionBox.setCenter(position.x + bulletSize.x / 2, position.y + bulletSize.y / 2);
+		gloomshroomCollisionBox.center.x = position.x + bulletSize.x / 2.0f;
+		gloomshroomCollisionBox.center.y = position.y + bulletSize.y / 2.0f;
 		
 	}
 
 	if (targetId == RoleId::P2) {
 		position.x = role_1->get_position().x - (bulletSize.x / 2 - role_1->get_role_collision_box().x / 2);
 		position.y = role_1->get_position().y - (bulletSize.y / 2 - role_1->get_role_collision_box().y / 2);
-		
+		// gloomshroomCollisionBox.setCenter(position.y + bulletSize.y / 2, position.y + bulletSize.y / 2);
+		gloomshroomCollisionBox.center.x = position.x + bulletSize.x / 2.0f;
+		gloomshroomCollisionBox.center.y = position.y + bulletSize.y / 2.0f;
 	}
 
 
@@ -90,7 +97,11 @@ void GloomshroomBullet::on_update(int delta) {
 
 void GloomshroomBullet::on_draw(const Camera& camera) const {
 
-	Bullet::on_draw(camera);
+	//Bullet::on_draw(camera);
+
+	if (is_debug) {
+		gloomshroomCollisionBox.draw();
+	}
 	
 	if (can_cause_damage) {
 		animation_bubble.on_draw(camera, (int)position.x, (int)position.y);
@@ -102,13 +113,17 @@ const Animation* GloomshroomBullet::get_animation() const {
 	return &animation_bubble;
 }
 
+// 传入玩家的位置和碰撞箱与子弹的碰撞箱进行碰撞检测
 inline bool GloomshroomBullet::checkCollisionBox(const Vector2& position, const Vector2& collisionBox)
 {
-	bool is_collide_x = (max(this->position.x + this->collisionBox.x, position.x + collisionBox.x)
+	/*bool is_collide_x = (max(this->position.x + this->collisionBox.x, position.x + collisionBox.x)
 		- min(this->position.x, position.x) <= this->collisionBox.x + collisionBox.x);
 	bool is_collide_y = (max(this->position.y + this->collisionBox.y, position.y + collisionBox.y)
 		- min(this->position.y, position.y) <= this->collisionBox.y + collisionBox.y);
-	return is_collide_x && is_collide_y;
+	return is_collide_x && is_collide_y;*/
+	
+	return gloomshroomCollisionBox.checkCollisionBox(position, collisionBox.x, collisionBox.y);
+	
 }
 
 #endif // !_GLOOMSHROOMBULLET_H_
