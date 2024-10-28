@@ -25,6 +25,9 @@
     <Filter Include="头文件\UI">
       <UniqueIdentifier>{5771d20f-a7c1-4e02-9c01-4bd9b08923d4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="头文件\Buffer">
+      <UniqueIdentifier>{bc324166-2cba-407e-96dc-b98e2c6588c2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h">
@@ -108,6 +111,24 @@
     <ClInclude Include="Circle.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Buffer.h">
+      <Filter>头文件\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="BufferHUD.h">
+      <Filter>头文件\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="RecoveryBuffer.h">
+      <Filter>头文件\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="SilenceBuffer.h">
+      <Filter>头文件\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="SpeedBoost.h">
+      <Filter>头文件\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="Invisible.h">
+      <Filter>头文件\Buffer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Atlas.h">
@@ -118,9 +139,6 @@
     </ClCompile>
     <ClCompile Include="StatusBar.h">
       <Filter>头文件\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="role.cpp">
-      <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -11,11 +11,11 @@ extern Atlas atlas_pea_break;
 class PeashooterBullet : public Bullet
 {
 public:
-	PeashooterBullet() {
+	PeashooterBullet(int damage) {
 		collisionBox.x = 64;
 		collisionBox.y = 64;
 
-		damage = 10;
+		this->damage = damage;
 
 		animation_pea_break.set_atlas(&atlas_pea_break);
 		animation_pea_break.set_inter_time(100);

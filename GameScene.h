@@ -4,6 +4,8 @@
 #include "scene.h"
 #include "Role.h"
 #include "Camera.h"
+#include "Buffer.h"
+#include "BufferHUD.h"
 #include "platform.h"
 #include "SceneManager.h"
 #include "StatusBar.h"
@@ -16,6 +18,7 @@ extern IMAGE img_platform_large;
 extern IMAGE img_platform_small;
 
 extern std::vector<Platform> Platform_list;
+extern std::vector<BufferHUD*> BufferHUD_list;
 
 extern Camera main_camera;
 
@@ -65,6 +68,18 @@ public:
 		timer_winner_slide_out.set_callback([&]()
 			{
 				_SM.switch_scene_to(SceneManager::scenes::MENU_SCENE);
+			});
+
+		timer_generate_buffer.restart();
+		timer_generate_buffer.set_wait_time(3000);
+		timer_generate_buffer.set_one_shot(false);
+		timer_generate_buffer.set_callback([&]()
+			{
+				if (BufferHUD_list.size() <= 4) {
+					BufferHUD* bufferHUF = new BufferHUD();
+					BufferHUD_list.push_back(bufferHUF);
+				}
+
 			});
 
 		role_1->set_position(200, 50);
@@ -152,15 +167,19 @@ public:
 	}
 
 	void OnUpdate(int interval_time) {
+
+		// 角色
 		role_1->on_update(interval_time);
 		role_2->on_update(interval_time);
 
+		// 人物状态组件
 		status_bar_1P.set_hp(role_1->get_hp());
 		status_bar_1P.set_mp(role_1->get_mp());
 		status_bar_2P.set_hp(role_2->get_hp());
 		status_bar_2P.set_mp(role_2->get_mp());
 
 		main_camera.on_updata(interval_time);
+		timer_generate_buffer.on_update(interval_time);
 
 		// 对已经失效的子弹进行清理
 		Bullet_list.erase(std::remove_if(Bullet_list.begin(), Bullet_list.end(), [](const Bullet* bullet) {
@@ -171,19 +190,34 @@ public:
 			return delectable;
 			}), Bullet_list.end());
 
+		// 对已经失效的BufferHUD进行清理
+		BufferHUD_list.erase(std::remove_if(BufferHUD_list.begin(), BufferHUD_list.end(), [](const BufferHUD* bufferHUD) {
+			bool delectable = bufferHUD->checkCanRemove();
+			if (delectable) {
+				delete bufferHUD;
+			}
+			return delectable;
+			}), BufferHUD_list.end());
+		
+		// 更新bufferHUD
+		for (BufferHUD* bufferHUD : BufferHUD_list) 
+			bufferHUD->on_update(interval_time);
+
+		// 子弹更新
 		for (Bullet* bullet : Bullet_list) 
 			bullet->on_update(interval_time);
-
+		
+		// 检测玩家是否掉入屏幕之外
 		const Vector2& position_1p = role_1->get_position();
 		const Vector2& position_2p = role_2->get_position();
-
-		// 检测玩家是否掉入屏幕之外
 		if (position_1p.y >= getheight())
 			role_1->set_hp(0);
 		if (position_2p.y >= getheight())
 			role_2->set_hp(0);
 		
+		// 控制结束游戏
 		if (role_1->get_hp() <= 0 || role_2->get_hp() <= 0) {
+			// 防止音乐循环播放
 			if (!is_game_over) {
 				mciSendString(_T("stop bgm_game"), NULL, 0, NULL);
 				mciSendString(_T("play ui_win from 0"), NULL, 0, NULL);
@@ -191,6 +225,7 @@ public:
 			is_game_over = true;
 		}
 		
+		// 游戏结束后的动画
 		if (is_game_over) {
 			pos_img_winner_bar.x += (int)(speed_winner_bar * interval_time);
 			pos_img_winner_text.x += (int)(speed_winner_text * interval_time);
@@ -223,6 +258,10 @@ public:
 			outtextxy(15, 15, _T("Press 'Q' again to stop debugging"));
 		}
 
+		// buffer渲染
+		for (const BufferHUD* buffer : BufferHUD_list)
+			buffer->on_draw(camera);
+
 		// 角色渲染
 		role_1->on_draw(camera);
 		role_2->on_draw(camera);
@@ -230,6 +269,7 @@ public:
 		// 子弹渲染
 		for (const Bullet* bullet : Bullet_list)
 			bullet->on_draw(camera);
+
 
 		if (is_game_over) {
 			putimage_alpha(pos_img_winner_bar.x, pos_img_winner_bar.y, &img_winner_bar);
@@ -240,6 +280,8 @@ public:
 			status_bar_1P.on_draw();
 			status_bar_2P.on_draw(); 
 		}
+
+
 	}
 
 	void OnExit() {
@@ -248,6 +290,8 @@ public:
 		
 		is_debug = false;
 		Bullet_list.clear();
+		BufferHUD_list.clear();
+		Platform_list.clear();
 		main_camera.reset(); 
 	}
 
@@ -259,21 +303,24 @@ private:
 	POINT pos_img_sky = { 0 };
 	POINT pos_img_hills = { 0 };
 
-	StatusBar status_bar_1P;
-	StatusBar status_bar_2P;
+	StatusBar status_bar_1P;				// 角色状态栏
+	StatusBar status_bar_2P;				// 角色状态栏
 
-	bool is_game_over = false;			// 游戏是否结束
+	bool is_game_over = false;				// 游戏是否结束
 	
-	POINT pos_img_winner_bar;			// 结算动效动画的背景位置
-	POINT pos_img_winner_text;			// 结算动效文字的背景位置
+	POINT pos_img_winner_bar = { 0 };		// 结算动效动画的背景位置
+	POINT pos_img_winner_text = { 0 };		// 结算动效文字的背景位置
 
 	int pos_img_winner_bar_dst = 0;			// 结算动效背景移动的目标位置
 	int pos_img_winner_text_dst = 0;		// 结算动效文本移动的目标位置
 
-	Timer timer_winner_slide_in;		// 结算动效背景滑入定时器
-	Timer timer_winner_slide_out;		// 结算动效文本滑出计时器
+	Timer timer_winner_slide_in;			// 结算动效背景滑入定时器
+	Timer timer_winner_slide_out;			// 结算动效文本滑出计时器
+	Timer timer_generate_buffer;			// buffer 测试定时器	
 
-	bool is_slide_out_started = false;	// 开始滑出
+	bool is_slide_out_started = false;		// 开始滑出
+
+	
 };
 
 

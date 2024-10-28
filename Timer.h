@@ -30,10 +30,10 @@ public:
 		is_paused = true;
 	}
 
-	void on_update(int val) {
+	void on_update(int delta) {
 		if (is_paused)
 			return;
-		passed_time += val;
+		passed_time += delta;
 		if (passed_time >= wait_time) {
 			// 这里主要是要考虑定时器有没有被触发
 			// 如果定时器是可以多次触发则不需要考虑有没有被触发过
@@ -45,6 +45,19 @@ public:
 			}
 		}
 	}
+
+	/*void on_update(int val, int delta) {
+		if (is_paused)
+			return;
+		passed_time += val;
+		if (passed_time >= wait_time) {
+			if (((!is_one_shot) || (is_one_shot && !is_shotted)) && callback) {
+				callback();
+				is_shotted = true;
+				passed_time = 0;
+			}
+		}
+	}*/
 
 	// 恢复暂停
 	void resume() {
@@ -63,6 +76,7 @@ private:
 	bool is_shotted = false;		// 是否触发
 	bool is_one_shot = false;		// 是否单次触发
 	std::function<void()> callback = nullptr;	// 设置计时器回调函数
+	std::function<void(int delta)> callback_buff = nullptr;
 };
 
 #endif // !_TIMER_H_

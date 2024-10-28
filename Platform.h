@@ -27,9 +27,9 @@ public:
 public:
 	struct  CollisionBox
 	{
-		float y;
-		float x_left;
-		float x_right;
+		float y;					// 平台的高度
+		float x_left;				// 平台的左侧
+		float x_right;				// 平台的右侧
 	};
 
 public:

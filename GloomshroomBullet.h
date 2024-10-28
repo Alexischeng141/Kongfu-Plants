@@ -54,7 +54,7 @@ GloomshroomBullet::GloomshroomBullet()
 	bulletSize.x = (float)animation_bubble.get_current_frame()->getwidth();
 	bulletSize.y = (float)animation_bubble.get_current_frame()->getheight();
 
-	gloomshroomCollisionBox.setRadius(bulletSize.x / 2.5f);
+	gloomshroomCollisionBox.setRadius(bulletSize.x / 3.5f);
 	
 	
 }
@@ -72,7 +72,6 @@ void GloomshroomBullet::on_update(int delta) {
 	if (targetId == RoleId::P1) {
 		position.x = role_2->get_position().x - (bulletSize.x / 2 - role_2->get_role_collision_box().x / 2);
 		position.y = role_2->get_position().y - (bulletSize.y / 2 - role_2->get_role_collision_box().y / 2);
-		// gloomshroomCollisionBox.setCenter(position.x + bulletSize.x / 2, position.y + bulletSize.y / 2);
 		gloomshroomCollisionBox.center.x = position.x + bulletSize.x / 2.0f;
 		gloomshroomCollisionBox.center.y = position.y + bulletSize.y / 2.0f;
 		
@@ -81,11 +80,14 @@ void GloomshroomBullet::on_update(int delta) {
 	if (targetId == RoleId::P2) {
 		position.x = role_1->get_position().x - (bulletSize.x / 2 - role_1->get_role_collision_box().x / 2);
 		position.y = role_1->get_position().y - (bulletSize.y / 2 - role_1->get_role_collision_box().y / 2);
-		// gloomshroomCollisionBox.setCenter(position.y + bulletSize.y / 2, position.y + bulletSize.y / 2);
 		gloomshroomCollisionBox.center.x = position.x + bulletSize.x / 2.0f;
 		gloomshroomCollisionBox.center.y = position.y + bulletSize.y / 2.0f;
 	}
 
+	// 增加子弹的碰撞半径
+	if (gloomshroomCollisionBox.getRadius() <= MAXLONG) {
+		gloomshroomCollisionBox.radius += 0.5f;
+	}
 
 	animation_bubble.on_update(delta);
 
@@ -114,16 +116,8 @@ const Animation* GloomshroomBullet::get_animation() const {
 }
 
 // 传入玩家的位置和碰撞箱与子弹的碰撞箱进行碰撞检测
-inline bool GloomshroomBullet::checkCollisionBox(const Vector2& position, const Vector2& collisionBox)
-{
-	/*bool is_collide_x = (max(this->position.x + this->collisionBox.x, position.x + collisionBox.x)
-		- min(this->position.x, position.x) <= this->collisionBox.x + collisionBox.x);
-	bool is_collide_y = (max(this->position.y + this->collisionBox.y, position.y + collisionBox.y)
-		- min(this->position.y, position.y) <= this->collisionBox.y + collisionBox.y);
-	return is_collide_x && is_collide_y;*/
-	
-	return gloomshroomCollisionBox.checkCollisionBox(position, collisionBox.x, collisionBox.y);
-	
+inline bool GloomshroomBullet::checkCollisionBox(const Vector2& position, const Vector2& collisionBox) {	
+	return gloomshroomCollisionBox.checkCollisionBox(position, collisionBox.x, collisionBox.y);	
 }
 
 #endif // !_GLOOMSHROOMBULLET_H_

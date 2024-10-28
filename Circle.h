@@ -72,9 +72,10 @@ public:
         setcolor(WHITE);
         circle((int)center.x, (int)center.y, (int)radius); // »æÖÆÔ²µÄÂÖÀª
     }
+public:
     Vector2 center; // Ô²ĞÄ
-private:
     float radius;   // °ë¾¶
+
 };
 
 #endif // _CIRCLE_H_

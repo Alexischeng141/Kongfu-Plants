@@ -5,6 +5,7 @@
 #include <graphics.h>
 #include "Camera.h"
 #include "Atlas.h"
+#include <random>
 
 // 图片翻转
 inline void flip_image(IMAGE* src, IMAGE* dst) {
@@ -90,6 +91,24 @@ inline void sketch_image(IMAGE* src, IMAGE* dst) {
 			dst_buffer[idx] = BGR(RGB(255, 255, 255)) | (src_buffer[idx] & 0xff000000);
 		}
 	}
+}
+
+// 生成一个长整形的随机数
+inline float generateRandomFloat(float min, float max) {
+	std::random_device rd;  // 获取随机数种子
+	std::mt19937 gen(rd()); // 初始化随机数生成器
+	std::uniform_real_distribution<float> dis(min, max); // 定义均匀分布
+
+	return dis(gen); // 生成并返回随机数
+}
+
+inline int generateRandomInt(int min, int max) {
+	// 创建随机数引擎
+	std::random_device rd;  // 随机数种子
+	std::mt19937 gen(rd());  // 随机数生成器
+	std::uniform_int_distribution<> dis(min, max); // 设定范围 [0, 2]
+
+	return dis(gen);
 }
 
 #endif // !_UTILS_H_

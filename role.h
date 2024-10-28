@@ -2,21 +2,28 @@
 #ifndef _ROLE_H_
 #define _ROLE_H_
 
-#include "Camera.h"
+#include "Animation.h"
+#include "SilenceBuffer.h"
+#include "SpeedBoost.h"
+#include "RecoveryBuffer.h"
+#include "Invisible.h"
+#include "BufferHUD.h"
 #include "Bullet.h"
+#include "Camera.h"
+#include "Particle.h"
+#include "Platform.h"
+#include "RoleId.h"
 #include "Timer.h"
 #include "Vector2.h"
-#include "RoleId.h"
-#include "Animation.h"
-#include "Platform.h"
-#include "Particle.h"
 
 #include <graphics.h>
 
 extern bool is_debug;
 
-extern std::vector<Platform> Platform_list;
 extern std::vector<Bullet*> Bullet_list;
+extern std::vector<BufferHUD*> BufferHUD_list;
+extern std::vector<Platform> Platform_list;
+
 extern Atlas atlas_run_effect_right;
 extern Atlas atlas_jump_effect_right;
 extern Atlas atlas_land_effect;
@@ -158,13 +165,31 @@ public:
 			particle.on_update(interval_time);
 		}
 
+		Buffer_list_triggered.erase(std::remove_if(
+			Buffer_list_triggered.begin(), Buffer_list_triggered.end(),
+			[](const Buffer* buffer)
+			{
+				bool delectable = buffer->checkIsExpired();
+				if (delectable) {
+					buffer->on_callback();
+					delete buffer;
+				}
+				return delectable;
+			}
+		), Buffer_list_triggered.end());
+
+		// 更新buffer
+		for (Buffer* buffer : Buffer_list_triggered) {
+			buffer->on_update(interval_time);
+		}
+
 		// 碰撞检测
 		move_and_collide(interval_time);
 
 		// 渲染无敌帧动画
-		if (is_showing_invulnerable_frame && hp > 0) {
+		if (is_showing_invulnerable_frame && hp > 0) 
 			sketch_image(current_animation->get_current_frame(), &img_sketch);
-		}
+		
 
 	}
 
@@ -331,13 +356,7 @@ public:
 
 	// 控制玩家行走
 	virtual void on_run(float distance) {
-
-		if(is_slow_down) {
-			position.x += distance * 0.5f;
-		}
-		else {
-			position.x += distance;
-		}
+		position.x += distance * _speedBoostRate;
 		timer_run_effect_generator.resume();		// 恢复粒子发射器，生成粒子
 	}
 
@@ -417,14 +436,12 @@ public:
 
 	// 使玩家处于减速状态
 	void make_slow_speed() {
-		is_normal_speed = false;
-		is_slow_down = true;
+		_speedBoostRate = 0.5f;
 	}
 
 	// 使玩家处于正常速度
 	void make_normal_speed() {
-		is_normal_speed = true;
-		is_slow_down = false;
+		_speedBoostRate = 1.0f;
 	}
 
 	// 使玩家处于减速移动
@@ -443,6 +460,69 @@ public:
 		default:
 			break;
 		}
+	}
+
+	// 在玩家的 buffer 容器中添加一个 buffer
+	Buffer* generateBuffer() {
+		Buffer* buffer = nullptr;
+		switch (generateRandomInt(0,3))
+		{
+		case 0:
+			buffer = new SpeedBoost(1000, 1.5f);
+			buffer->set_callback([&]
+				{
+					_speedBoostRate = 1.0f;
+				});
+			break;
+		case 1:
+			buffer = new SilenceBuffer(1000);
+			buffer->set_callback([&]()
+				{
+					_is_silence = false;
+				});
+			break;
+		case 2:
+			buffer = new RecoveryBuffer(1000, 0.8f);
+			buffer->set_callback([&]()
+				{
+					_recovery = 0.0f;
+				});
+			break;
+		case 3:
+			buffer = new InvisibleBuffer(1000);
+			buffer->set_callback([&]()
+				{
+					_is_invisible = false;
+				});
+			break;
+		default:
+			break;
+		}
+
+		return buffer;
+	}
+
+	// 应用 buffer
+	void applyBuffer(Buffer* buffer) {
+
+		switch (buffer->get_type())
+		{
+		case Buffer::SpeedBoost:
+			_speedBoostRate = buffer->getFloatValue();
+			break;
+		case Buffer::HpRecovery:
+			_recovery = buffer->getFloatValue();
+			break;
+		case Buffer::Silence:
+			_is_silence = buffer->getBooleanValue();
+			break;
+		case Buffer::Invisible:
+			_is_invisible = buffer->getBooleanValue();
+			break;
+		default:
+			break;
+		}
+
 	}
 
 protected:
@@ -479,6 +559,16 @@ protected:
 			}
 		}
 
+		// 角色与 buffer 碰撞检测
+		for (BufferHUD* bufferHUD : BufferHUD_list) {
+			if (bufferHUD->checkCollisionBox(position, role_collision_box)) {
+				bufferHUD->setCanRemove(false);
+				Buffer* newBuffer = generateBuffer();
+				applyBuffer(newBuffer);
+				Buffer_list_triggered.push_back(newBuffer);
+			}
+		}
+
 		// 不处于无敌状态时
 		if (!is_invulnerable) {
 			for (Bullet* bullet : Bullet_list) {
@@ -493,7 +583,7 @@ protected:
 					make_invulnerable();												// 更新角色为无敌状态
 					bullet->on_collide();												// 子弹的碰撞方法
 					if(!(bullet->getBulletType() == Bullet::bulletType::gloomshroom))
-						bullet->setCanCauseDamage(false);									// 更新子弹可造成伤害状态为 false 
+						bullet->setCanCauseDamage(false);								// 更新子弹可造成伤害状态为 false 
 					if ((hp -= bullet->getDamage()) == 0) {								// 更新玩家血量以及存活状态
 						is_alive = false;
 					}
@@ -566,6 +656,12 @@ protected:
 	int mp = 0;										// 玩家技能值
 	int hp = 100;									// 玩家生命值
 	int attack_cd = 500;							// 玩家普通攻击冷却时间
+	int base_damage = 1;							// 玩家基础攻击力
+	int current_damage = base_damage;				// 玩家当前的攻击力
+	float _speedBoostRate = 1.0f;					// 玩家速度控制器
+	float _recovery = 0.0f;							// 玩家的恢复强度
+	bool _is_silence = false;						// 玩家是否被沉默
+	bool _is_invisible = false;						// 玩家是否不可选中
 
 private:
 
@@ -587,6 +683,7 @@ private:
 	Timer timer_cursor_visibility;					// 玩家光标指示器可见定时器
 	
 	std::vector<Particle> Particle_list;			// 玩家粒子管理器
+	std::vector<Buffer*> Buffer_list_triggered;		// 玩家触发的 buffer
 
 };
 #endif // !_ROLE_H_

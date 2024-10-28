@@ -57,6 +57,7 @@ public:
 		timer_spwan_pea_ex.set_callback([&]() { spawn_pea_bullet(speed_pea_ex); });
 
 		attack_cd = 100;
+		base_damage = 20;
 		Role::set_player_type(1);
 
 	}
@@ -66,7 +67,7 @@ public:
 
 		Role::on_update(interval_time);
 
-		if (is_attacking_ex) {			// 在on_attack_ex方法中is_attacking_ex被设为true
+		if (is_attacking_ex) {			// 在on_attack_ex方法中is_attacking_ex被设为 true
 			main_camera.shake(5, 100);
 			timer_attack_ex.on_update(interval_time);
 			timer_spwan_pea_ex.on_update(interval_time);
@@ -113,15 +114,16 @@ private:
 
 	// 子弹生成逻辑
 	void spawn_pea_bullet(float speed) {
-		Bullet* bullet = new PeashooterBullet();
+
+		Bullet* bullet = new PeashooterBullet(current_damage);
 
 		Vector2 bullet_position;  
 		Vector2 bullet_velocity = { 0,0 };
 
 		const Vector2& bullet_collisionBox = bullet->getCollisionBox();
 
-		bullet_position.x = is_facing_right
-			? position.x + role_collision_box.x - bullet_collisionBox.x / 2
+		bullet_position.x = is_facing_right ? 
+			position.x + role_collision_box.x - bullet_collisionBox.x / 2
 			: position.x - bullet_collisionBox.x / 2;
 		bullet_position.y = position.y;
 

@@ -3,6 +3,8 @@
 #include "Atlas.h"
 #include "Role.h"
 #include "Bullet.h"
+#include "Buffer.h"
+#include "BufferHUD.h"
 #include "MenuScene.h"
 #include "GameScene.h"
 #include "platform.h"
@@ -143,6 +145,8 @@ IMAGE* img_2p_avatar;
 
 std::vector<Platform> Platform_list;		// 场景中所中平台的管理容器
 std::vector<Bullet*> Bullet_list;			// 子弹容器中管理着场景中所有的子弹
+std::vector<BufferHUD*> BufferHUD_list;		// 管理场景中出现的 buffer 盒子
+
 
 SceneManager _SM;
 Camera main_camera;
