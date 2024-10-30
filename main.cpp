@@ -143,10 +143,11 @@ Role* role_2 = nullptr;
 IMAGE* img_1p_avatar;
 IMAGE* img_2p_avatar;
 
+std::vector<BufferHUD*> BufferHUD_list;	// 角色buffHUD容器
 std::vector<Platform> Platform_list;		// 场景中所中平台的管理容器
 std::vector<Bullet*> Bullet_list;			// 子弹容器中管理着场景中所有的子弹
-std::vector<BufferHUD*> BufferHUD_list;		// 管理场景中出现的 buffer 盒子
-
+std::vector<Buffer*> Buffer_list;			// 场景中的 buffer
+std::vector<Buffer*> Buffer_list_triggered;		// 玩家 buffer 管理器
 
 SceneManager _SM;
 Camera main_camera;

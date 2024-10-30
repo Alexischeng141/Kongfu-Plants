@@ -28,6 +28,9 @@
     <Filter Include="头文件\Buffer">
       <UniqueIdentifier>{bc324166-2cba-407e-96dc-b98e2c6588c2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="头文件\Particles">
+      <UniqueIdentifier>{d0a49336-e8f1-415f-9e50-fbbc9d26951e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h">
@@ -102,9 +105,6 @@
     <ClInclude Include="GloomshroomBulletEx.h">
       <Filter>头文件\bullet</Filter>
     </ClInclude>
-    <ClInclude Include="Particle.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="resource.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -128,6 +128,9 @@
     </ClInclude>
     <ClInclude Include="Invisible.h">
       <Filter>头文件\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="Particle.h">
+      <Filter>头文件\Particles</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

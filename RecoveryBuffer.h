@@ -7,11 +7,10 @@
 class RecoveryBuffer : public Buffer
 {
 public:
-	RecoveryBuffer() = default;
+	RecoveryBuffer();
 	~RecoveryBuffer() = default;
-	RecoveryBuffer(int duration, float _recoveryPercentage);
 
-	float getFloatValue() override { return _recoveryPercentage;  }
+	float getRecoveryPercentage() const { return _recoveryPercentage;  }
 
 	void on_update(int delta) override {
 		Buffer::on_update(delta);
@@ -19,14 +18,14 @@ public:
 
 private:
 
-	float _recoveryPercentage = 0.0f;	// 回复量
+	float _recoveryPercentage = 0.8f;	// 回复量
 
 };
 
-RecoveryBuffer::RecoveryBuffer(int duration, float _recoveryPercentage) : Buffer(duration)
+RecoveryBuffer::RecoveryBuffer()
 {
-	this->type = Buffer::HpRecovery;
-	this->_recoveryPercentage = _recoveryPercentage;
+	type = Buffer::HpRecovery;
+	_recoveryPercentage = 0.8f;
 }
 
 #endif // !_RECOVERYBUFFER_H_

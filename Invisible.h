@@ -6,18 +6,18 @@
 class  InvisibleBuffer : public Buffer
 {
 public:
-	InvisibleBuffer() = default;
-	 InvisibleBuffer(int duration);
+	InvisibleBuffer();
 	 ~InvisibleBuffer() = default;
-	bool getBooleanValue() override { return _invisible; }
+	 bool getIsInvisible() const { return _is_invisible; }
+	
 	void on_update(int delta) override { Buffer::on_update(delta); }
 private:
-	const bool _invisible = true;
+	bool _is_invisible = true;
 };
 
- InvisibleBuffer:: InvisibleBuffer(int duration) : Buffer(duration)
+ InvisibleBuffer::InvisibleBuffer()
 {
-	 this->type = Buffer::Invisible;
+	 type = Buffer::Invisible;
 }
 
 #endif // !_INVISIBLE_H_

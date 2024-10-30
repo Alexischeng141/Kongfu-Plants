@@ -50,7 +50,7 @@ public:
 		timer_attack_ex_remain.set_callback([&]() 
 			{
 				is_attacking_ex = false;
-				make_normal_speed();			// 取消玩家减速状态
+						// 取消玩家减速状态
 			});
 
 		timer_generate_bubbles.set_wait_time(350);
@@ -140,7 +140,7 @@ private:
 	// 特殊攻击无非就是普通子弹的生成速度加快了
 	void generate_gloomshroombullet_ex() {
 		is_attacking_ex = true;
-		make_slow_speed();
+		
 		timer_attack_ex_remain.restart();
 		timer_generate_bubbles.restart();
 		is_facing_right ? animation_attack_ex_right.reset() : animation_attack_ex_left.reset();

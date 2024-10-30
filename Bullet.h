@@ -96,13 +96,9 @@ public:
 			&& this->position.y + this->collisionBox.y / 2 <= position.y + collisionBox.y;
 	}
 
-	virtual void on_update(int interval_time) {
+	virtual void on_update(int interval_time) { }
 
-	}
-
-	virtual const Animation* get_animation() const {
-		return nullptr;
-	};
+	virtual const Animation* get_animation() const { return nullptr; };
 
 	virtual void on_draw(const Camera& camera) const {
 

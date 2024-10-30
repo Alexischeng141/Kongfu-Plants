@@ -30,6 +30,7 @@ public:
 		is_paused = true;
 	}
 
+	// 定时器更新
 	void on_update(int delta) {
 		if (is_paused)
 			return;
@@ -68,7 +69,11 @@ public:
 	void set_callback(const std::function<void()> callback) {
 		this->callback = callback;
 	}
-
+	
+	int get_remain_time() const {
+		return wait_time - passed_time;
+	}
+	
 private:
 	int passed_time = 0;			// 已过去的时间
 	int wait_time = 0;				// 等待时间

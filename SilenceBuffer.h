@@ -6,20 +6,20 @@
 class SilenceBuffer : public Buffer
 {
 public:
-	SilenceBuffer() = default;
+	SilenceBuffer();
 	~SilenceBuffer() = default;
-	SilenceBuffer(int duration);
-	bool getBooleanValue() override { return _canReleaseEx; }
+	
+	bool getIsSilence() const { return _is_silence; }
 	void on_update(int delta) override {
 		Buffer::on_update(delta);
 	}
 private:
-	const bool _canReleaseEx = false;
+	const bool _is_silence = true;
 };
 
-SilenceBuffer::SilenceBuffer(int duration) : Buffer(duration)
+SilenceBuffer::SilenceBuffer()
 {
-	this->type = Buffer::Silence; 
+	type = Buffer::Silence; 
 }
 
 #endif // !_SILENCEBUFFER_H_

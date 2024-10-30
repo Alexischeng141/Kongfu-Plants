@@ -29,11 +29,11 @@ public:
 		position.y = 0;
 	}
 
-	void shake(float strength, int duration) {
+	void shake(float strength, int duration_on_role) {
 		is_shaking = true;
 		shaking_strength = strength;
 
-		timer_shake.set_wait_time(duration);
+		timer_shake.set_wait_time(duration_on_role);
 		timer_shake.restart();
 	}
 

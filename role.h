@@ -4,10 +4,10 @@
 
 #include "Animation.h"
 #include "SilenceBuffer.h"
+#include "BufferHUD.h"
 #include "SpeedBoost.h"
 #include "RecoveryBuffer.h"
 #include "Invisible.h"
-#include "BufferHUD.h"
 #include "Bullet.h"
 #include "Camera.h"
 #include "Particle.h"
@@ -16,11 +16,12 @@
 #include "Timer.h"
 #include "Vector2.h"
 
-#include <graphics.h>
 
 extern bool is_debug;
 
+extern std::vector<Buffer*> Buffer_list_triggered;
 extern std::vector<Bullet*> Bullet_list;
+extern std::vector<Buffer*> Buffer_list;
 extern std::vector<BufferHUD*> BufferHUD_list;
 extern std::vector<Platform> Platform_list;
 
@@ -46,7 +47,7 @@ public:
 			{
 				is_jump_effect_visible = false;
 			});
-		
+
 		animation_land_effect.set_atlas(&atlas_land_effect);
 		animation_land_effect.set_inter_time(50);
 		animation_land_effect.set_loop(false);
@@ -62,7 +63,7 @@ public:
 			{
 				is_cursor_visible = false;
 			});
-		
+
 		timer_attack.set_wait_time(attack_cd);
 		timer_attack.set_one_shot(true);
 		timer_attack.set_callback([&]() { can_attack = true; });
@@ -72,9 +73,9 @@ public:
 		timer_invulnerable.set_callback([&]() { is_invulnerable = false; });
 
 		timer_invulnerable_blink.set_wait_time(75);
-		timer_invulnerable_blink.set_callback([&]() { 
-			is_showing_invulnerable_frame = !is_showing_invulnerable_frame; 
-		});
+		timer_invulnerable_blink.set_callback([&]() {
+			is_showing_invulnerable_frame = !is_showing_invulnerable_frame;
+			});
 
 		/*
 			emplace_back 是 C++ 标准库中 std::vector 类的一个成员函数，用于在容器的末尾直接构造一个元素。
@@ -101,7 +102,7 @@ public:
 				Particle_list.emplace_back(particle_position, &atlas_run_effect_right, 150);
 			});
 
-		
+
 
 	}
 
@@ -117,7 +118,7 @@ public:
 
 		if (move_direction != 0) {
 			// 玩家移动时播放移动动画
-			if (is_attacking_ex && !(type==playerType::gloomshroom))
+			if (is_attacking_ex && !(type == playerType::gloomshroom))
 				return;
 			is_facing_right = move_direction > 0;
 			current_animation = is_facing_right ? &animation_run_right : &animation_run_left;
@@ -141,7 +142,7 @@ public:
 			timer_die_effect_generator.on_update(interval_time);
 			current_animation = last_hurt_direction.x < 0 ? &animation_die_left : &animation_die_right;
 		}
-		
+
 		current_animation->on_update(interval_time);					// 更新动画帧
 		animation_jump_effect.on_update(interval_time);					// 更新跳跃特效定时器
 		animation_land_effect.on_update(interval_time);					// 更新落地特效定时器
@@ -165,6 +166,7 @@ public:
 			particle.on_update(interval_time);
 		}
 
+		// 更新角色的 buffer
 		Buffer_list_triggered.erase(std::remove_if(
 			Buffer_list_triggered.begin(), Buffer_list_triggered.end(),
 			[](const Buffer* buffer)
@@ -178,7 +180,7 @@ public:
 			}
 		), Buffer_list_triggered.end());
 
-		// 更新buffer
+		// 更新 buffer
 		for (Buffer* buffer : Buffer_list_triggered) {
 			buffer->on_update(interval_time);
 		}
@@ -187,9 +189,9 @@ public:
 		move_and_collide(interval_time);
 
 		// 渲染无敌帧动画
-		if (is_showing_invulnerable_frame && hp > 0) 
+		if (is_showing_invulnerable_frame && hp > 0)
 			sketch_image(current_animation->get_current_frame(), &img_sketch);
-		
+
 
 	}
 
@@ -231,7 +233,7 @@ public:
 						mp = 0;
 					}
 				default:
-					break; 
+					break;
 				}
 				break;
 			case RoleId::P2:
@@ -310,7 +312,7 @@ public:
 		}
 	}
 
-	virtual void on_draw(const Camera & camera) {
+	virtual void on_draw(const Camera& camera) {
 
 		if (is_cursor_visible) {
 			switch (role_id)
@@ -350,7 +352,7 @@ public:
 			rectangle((int)position.x, (int)position.y, (int)(position.x + role_collision_box.x), (int)(position.y + role_collision_box.y));
 		}
 
-		
+
 
 	}
 
@@ -424,7 +426,7 @@ public:
 	}
 
 	int get_mp() {
-		return this->mp; 
+		return this->mp;
 	}
 
 	// 设置玩家为无敌状态
@@ -434,61 +436,33 @@ public:
 	}
 
 
-	// 使玩家处于减速状态
-	void make_slow_speed() {
-		_speedBoostRate = 0.5f;
-	}
-
-	// 使玩家处于正常速度
-	void make_normal_speed() {
-		_speedBoostRate = 1.0f;
-	}
-
-	// 使玩家处于减速移动
-	void move_slow_down(int strength, int delta) {
-		switch (strength)
-		{
-		case slowDownLevel::low:
-            position += velocity * (float)(delta / 0.8f);
-			break;
-		case slowDownLevel::medium:
-			position += velocity * (float)(delta / 0.6f);
-			break;
-		case slowDownLevel::high:
-			position += velocity * (float)(delta / 0.4f);
-			break;
-		default:
-			break;
-		}
-	}
-
 	// 在玩家的 buffer 容器中添加一个 buffer
-	Buffer* generateBuffer() {
+	/*Buffer* generateBuffer() {
 		Buffer* buffer = nullptr;
-		switch (generateRandomInt(0,3))
+		switch (generateRandomInt(1, 4))
 		{
-		case 0:
+		case 1:
 			buffer = new SpeedBoost(1000, 1.5f);
 			buffer->set_callback([&]
 				{
 					_speedBoostRate = 1.0f;
 				});
 			break;
-		case 1:
+		case 2:
 			buffer = new SilenceBuffer(1000);
 			buffer->set_callback([&]()
 				{
 					_is_silence = false;
 				});
 			break;
-		case 2:
+		case 3:
 			buffer = new RecoveryBuffer(1000, 0.8f);
 			buffer->set_callback([&]()
 				{
 					_recovery = 0.0f;
 				});
 			break;
-		case 3:
+		case 4:
 			buffer = new InvisibleBuffer(1000);
 			buffer->set_callback([&]()
 				{
@@ -498,38 +472,109 @@ public:
 		default:
 			break;
 		}
-
 		return buffer;
+	}*/
+
+	// 检查 buff 是否已经存在
+	bool isBufferExists(Buffer::Type type) {
+		for (Buffer* buffer : Buffer_list_triggered) {
+			if (buffer->isBufferExists(type)) {
+				buffer->resetTimer();
+				return true;
+			}
+		}
+		return false;
 	}
 
 	// 应用 buffer
-	void applyBuffer(Buffer* buffer) {
+	bool applyBuffer(const Buffer& buffer) {
 
-		switch (buffer->get_type())
+		switch (buffer.get_type())
+		{
+		case Buffer::SpeedBoost: 
+		{
+			if (isBufferExists(Buffer::SpeedBoost)) {
+				return false;		// 如果存在就返回 false 表示 buffer 不能被添加到 buffer_list_triggered中去
+			}
+			const SpeedBoost& speed = (SpeedBoost&)buffer;
+			_speedBoostRate = speed.getSpeedRate();
+			break;
+		}
+		case Buffer::HpRecovery:
+		{
+			if (isBufferExists(Buffer::HpRecovery)) {
+				return false;
+			}
+			const RecoveryBuffer& recovery = (RecoveryBuffer&)buffer;
+			_recovery = recovery.getRecoveryPercentage();
+			break;
+		}
+		case Buffer::Silence:
+		{
+			if (isBufferExists(Buffer::Silence)) {
+				return false;
+			}
+			const SilenceBuffer& silence = (SilenceBuffer&)buffer;
+			_is_silence = silence.getIsSilence();
+			break;
+		}
+		case Buffer::Invisible:
+		{
+			if (isBufferExists(Buffer::Invisible)) {
+				return false;
+			}
+			InvisibleBuffer& invisible = (InvisibleBuffer&)buffer;
+			_is_invisible = invisible.getIsInvisible();
+			break;
+		}
+		default:
+			break;
+		}
+		return true;
+	}
+
+	void setCallback(Buffer& buffer) {
+		switch (buffer.get_type())
 		{
 		case Buffer::SpeedBoost:
-			_speedBoostRate = buffer->getFloatValue();
-			break;
-		case Buffer::HpRecovery:
-			_recovery = buffer->getFloatValue();
+			buffer.set_callback([&]()
+				{
+					_speedBoostRate = 1.0f;
+				});
 			break;
 		case Buffer::Silence:
-			_is_silence = buffer->getBooleanValue();
+			buffer.set_callback([&]()
+				{
+					_is_silence = false;
+				});
+			break;
+		case Buffer::HpRecovery:
+			buffer.set_callback([&]()
+				{
+					_recovery = 0.0f;
+				});
 			break;
 		case Buffer::Invisible:
-			_is_invisible = buffer->getBooleanValue();
+			buffer.set_callback([&]()
+				{
+					_is_invisible = false;
+				});
 			break;
 		default:
 			break;
 		}
+	}
 
+	void generateBufferHUD() {
+		BufferHUD* bufferHUD = new BufferHUD();
+		BufferHUD_list.push_back(bufferHUD);
 	}
 
 protected:
 	void move_and_collide(int delta) {
 
-		float last_velocity = velocity.y;		// 速度存储器记录了y方向上的速度分量
-		velocity.y += gravity * delta;			// 更新y方向上的速度
+		float last_velocity = velocity.y;			// 速度存储器记录了y方向上的速度分量
+		velocity.y += gravity * delta;				// 更新y方向上的速度
 		position.y += velocity.y * (float)delta;
 
 		if (hp <= 0) {
@@ -559,15 +604,28 @@ protected:
 			}
 		}
 
-		// 角色与 buffer 碰撞检测
-		for (BufferHUD* bufferHUD : BufferHUD_list) {
-			if (bufferHUD->checkCollisionBox(position, role_collision_box)) {
-				bufferHUD->setCanRemove(false);
-				Buffer* newBuffer = generateBuffer();
-				applyBuffer(newBuffer);
-				Buffer_list_triggered.push_back(newBuffer);
+		// 使用迭代器遍历  buffer list 将发生碰撞的 buffer 转移到  buffer list triggered 表中
+		for (auto it = Buffer_list.begin(); it != Buffer_list.end(); ) {
+			if ((*it)->checkCollisionBox(position, role_collision_box)) {
+				(*it)->setIsTriggered();
+				generateBufferHUD();
+				
+				Buffer*& bf = *it;
+				setCallback(*bf);
+				if (applyBuffer(*bf)) {
+					Buffer_list_triggered.push_back(*it);	// 将 buffer 添加到角色自身的 buffer 管理容器
+					it = Buffer_list.erase(it);
+				} 
+				else {
+					(*it)->setCanRemove();
+					++it;
+				}
+			}
+			else {
+				++it;
 			}
 		}
+
 
 		// 不处于无敌状态时
 		if (!is_invulnerable) {
@@ -683,7 +741,7 @@ private:
 	Timer timer_cursor_visibility;					// 玩家光标指示器可见定时器
 	
 	std::vector<Particle> Particle_list;			// 玩家粒子管理器
-	std::vector<Buffer*> Buffer_list_triggered;		// 玩家触发的 buffer
+	
 
 };
 #endif // !_ROLE_H_

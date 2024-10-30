@@ -17,8 +17,10 @@ extern IMAGE img_hills;
 extern IMAGE img_platform_large;
 extern IMAGE img_platform_small;
 
-extern std::vector<Platform> Platform_list;
 extern std::vector<BufferHUD*> BufferHUD_list;
+extern std::vector<Platform> Platform_list;
+extern std::vector<Buffer*> Buffer_list;
+extern std::vector<Buffer*> Buffer_list_triggered;
 
 extern Camera main_camera;
 
@@ -75,17 +77,14 @@ public:
 		timer_generate_buffer.set_one_shot(false);
 		timer_generate_buffer.set_callback([&]()
 			{
-				if (BufferHUD_list.size() <= 4) {
-					BufferHUD* bufferHUF = new BufferHUD();
-					BufferHUD_list.push_back(bufferHUF);
+				if (Buffer_list.size() <= 4) {
+					Buffer* buffer = generateBuffer();
+					Buffer_list.push_back(buffer);
 				}
-
 			});
 
 		role_1->set_position(200, 50);
 		role_2->set_position(975, 50);
-
-		
 
 		pos_img_sky.x = (getwidth() - img_sky.getwidth()) / 2;
 		pos_img_sky.y = (getheight() - img_sky.getheight()) / 2;
@@ -190,22 +189,38 @@ public:
 			return delectable;
 			}), Bullet_list.end());
 
-		// 对已经失效的BufferHUD进行清理
-		BufferHUD_list.erase(std::remove_if(BufferHUD_list.begin(), BufferHUD_list.end(), [](const BufferHUD* bufferHUD) {
-			bool delectable = bufferHUD->checkCanRemove();
-			if (delectable) {
-				delete bufferHUD;
-			}
-			return delectable;
-			}), BufferHUD_list.end());
-		
-		// 更新bufferHUD
-		for (BufferHUD* bufferHUD : BufferHUD_list) 
-			bufferHUD->on_update(interval_time);
+		//// 对已经失效的BufferHUD进行清理
+		//BufferHUD_list.erase(std::remove_if(BufferHUD_list.begin(), BufferHUD_list.end(), [](const BufferHUD* bufferHUD) {
+		//	bool delectable = bufferHUD->checkCanRemove();
+		//	if (delectable) {
+		//		delete bufferHUD;
+		//	}
+		//	return delectable;
+		//	}), BufferHUD_list.end());
+		//
+		//// 更新 buffer HUD
+		//for (BufferHUD* bufferHUD : BufferHUD_list) 
+		//	bufferHUD->on_update(interval_time);
 
 		// 子弹更新
 		for (Bullet* bullet : Bullet_list) 
 			bullet->on_update(interval_time);
+
+		// 删除场景的 buffer
+		Buffer_list.erase(std::remove_if(Buffer_list.begin(), Buffer_list.end(), [](const Buffer* buffer)
+			{
+				bool delectable = buffer->checkCanRemove();
+				if (delectable) {
+					delete buffer;
+				}
+				return delectable;
+			}), Buffer_list.end());
+
+		// 更新场景中的 buffer
+		for (Buffer* buffer : Buffer_list) {
+			buffer->on_update(interval_time);
+		}
+
 		
 		// 检测玩家是否掉入屏幕之外
 		const Vector2& position_1p = role_1->get_position();
@@ -256,11 +271,16 @@ public:
 		if (is_debug) {
 			settextcolor(RGB(255, 0, 0));
 			outtextxy(15, 15, _T("Press 'Q' again to stop debugging"));
+
 		}
 
-		// buffer渲染
-		for (const BufferHUD* buffer : BufferHUD_list)
+		//// buffer渲染
+		//for (const BufferHUD* buffer : BufferHUD_list)
+		//	buffer->on_draw(camera);
+
+		for (const Buffer* buffer : Buffer_list) {
 			buffer->on_draw(camera);
+		}
 
 		// 角色渲染
 		role_1->on_draw(camera);
@@ -290,9 +310,31 @@ public:
 		
 		is_debug = false;
 		Bullet_list.clear();
-		BufferHUD_list.clear();
+		Buffer_list.clear();
 		Platform_list.clear();
 		main_camera.reset(); 
+	}
+
+	Buffer* generateBuffer() {
+		Buffer* buffer = nullptr;
+		switch (generateRandomInt(0, 3))
+		{
+		case 0:
+			buffer = new SpeedBoost();
+			break;
+		case 1:
+			buffer = new SilenceBuffer();
+			break;
+		case 2:
+			buffer = new RecoveryBuffer();
+			break;
+		case 3:
+			buffer = new InvisibleBuffer();
+			break;
+		default:
+			break;
+		}
+		return buffer;
 	}
 
 private:
@@ -320,7 +362,6 @@ private:
 
 	bool is_slide_out_started = false;		// 开始滑出
 
-	
 };
 
 

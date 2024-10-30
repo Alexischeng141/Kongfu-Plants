@@ -6,13 +6,11 @@
 class SpeedBoost : public Buffer
 {
 public:
-	SpeedBoost() = default;
+	SpeedBoost();
 	~SpeedBoost() = default;
-	SpeedBoost(int duration, float _speedRate);
+	
 
-	float getFloatValue() override { return _speedRate;  }
-
-	float getSpeedRate() {
+	float getSpeedRate() const {
 		return _speedRate;
 	}
 
@@ -20,14 +18,14 @@ public:
 		Buffer::on_update(delta);
 	}
 
-	float _speedRate = 1.5f;	// 速度增加倍率
+	float _speedRate;	// 速度增加倍率
 private:
 };
 
-SpeedBoost::SpeedBoost(int duration, float _speedRate) : Buffer(duration)
+SpeedBoost::SpeedBoost()
 {
-	this->type = Buffer::SpeedBoost;
-	this->_speedRate = _speedRate;
+	_speedRate = 1.5f;
+	type = Buffer::SpeedBoost;
 }
 
 #endif // !_SPEEDBOOST_H_
